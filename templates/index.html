@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Karel</title>
+    <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="static/assets/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="static/assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="static/assets/css/ace-fonts.css" />
+    <link rel="stylesheet" href="static/assets/css/uncompressed/ace.css" />
+    <link rel="stylesheet" href="static/assets/css/ace-responsive.min.css" />
+    <link rel="stylesheet" href="static/assets/css/ace-skins.min.css" />
+    <link rel="stylesheet" href="static/assets/css/app.css" />
+    <link rel="stylesheet" href="static/assets/css/code_skin.css" />
+    <script type="text/javascript" src="static/assets/js/jquery-2.0.3.min.js"></script>
+</head>
+<body>
+<link href="static/media/css/codemirror.css" rel="stylesheet">
+<link href="static/media/css/app.css" rel="stylesheet">
+<div id="wrap">
+  <div class="row-fluid">
+    <div class="span7">
+      <div id="ref_canvas_container">
+        <canvas id='canvas'></canvas>
+      </div>
+    </div>
+        <div class="tab-pane active karel-editor" id="editor">
+            <textarea name="code" id="code" rows="80" cols="20">function main() {
+    turnLeft();
+    move();
+}
+          </textarea>
+          <br/>
+          	<div visible="yes" id="button-pack" class="row-fluid">
+            <div>
+              <input class="btn btn-success" type="button" id="execute_btn" value="Executa" />
+              <input class="btn" type="button" id="clean" value="Neteja l'editor" />
+            </div>
+          </div>
+          <br/>
+            <div class="alert alert-error" style="cursor: pointer ;display:none" id="error">
+                <button type="button" class="close" data-dismiss="alert" id="btn_dismiss">
+                <i class="icon-remove" id="remove"></i>
+                </button>
+                <strong>
+                <i class="icon-remove" id="error_msg"></i>
+                </strong>
+                <i class="icon-question-sign"></i>
+                </button>
+             </div>
+             <div class="alert alert-block alert-success" style="display:none" id="expl_error">
+                <strong>
+                 <i class="icon-ok" id="expl_text"></i>
+                </strong>
+                <button class="btn btn-small btn-success" onclick="expl_close();">D'acord</button>
+            </div>
+        <br/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="static/media/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript">
+  var pc_name = 'test';
+  var card_id = 1;
+  var form_authenticity_token = '';
+  var level_name = 'level0';
+  var max_instr = 10;
+  var max_time = 100;
+  var num_beepers = 100;
+  if (isNaN(max_instr)) {
+    max_instr = 0;
+  }
+  if (isNaN(max_time)) {
+    max_time = 0;
+  }
+  if (isNaN(num_beepers)) {
+    num_beepers = 0;
+  }
+  function showtext(name) {
+          var obj = name.getAttribute("title");
+          if ($("#"+obj).css('display') == "none"){
+          $("#"+obj).show();
+          } else{
+          $("#"+obj).hide();
+          }
+          }
+</script>
+<script src="static/assets/js/jwerty/jwerty.js"></script>
+<script src="static/assets/js/bootbox.min.js"></script>
+<script src="static/media/js/codemirror.js"></script>
+<script src="static/media/js/javascript/javascript.js"></script>
+<script src="static/media/js/starterCode.js"></script>
+<script src="lib/impact/impact.js"></script>
+<script type="text/javascript" src="static/assets/js/reconnecting-websocket.min.js"></script>
+<script src="lib/game/main.js"></script>
+<script src="static/media/js/app.js"></script>
+<script src="static/assets/js/keyboard_common.js"></script>
+
+<script type="text/javascript">
+</script>
+</body>
+</html>

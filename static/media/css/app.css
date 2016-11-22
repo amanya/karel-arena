@@ -1,0 +1,177 @@
+      /* Sticky footer styles
+      -------------------------------------------------- */
+
+      html,
+      body {
+        height: 100%;
+        /* The html and body elements cannot have any padding or margin. */
+      }
+
+      /* Wrapper for page content to push down footer */
+      #wrap {
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+      }
+
+      /* Set the fixed height of the footer here */
+      #push,
+      #footer {
+        height: 60px;
+      }
+      #footer {
+        background-color: #f5f5f5;
+      }
+
+      /* Lastly, apply responsive CSS fixes as necessary */
+      @media (max-width: 767px) {
+        #footer {
+          margin-left: -20px;
+          margin-right: -20px;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+      }
+
+
+      /* Custom page CSS
+      -------------------------------------------------- */
+      /* Not required for template or sticky footer method. */
+
+      .container {
+        width: auto;
+        max-width: 940px;
+      }
+      .container .credit {
+        margin: 20px 0;
+      }
+
+    .CodeMirror {
+        font-size: 300%;
+    }
+
+
+      td.colors {
+          text-align: center;
+          font-weight: bold;
+      }
+      .yellow { background-color: yellow; }
+      .fuchsia { background-color: fuchsia; }
+      .red { background-color: red; }
+      .silver { background-color: silver; }
+      .gray { background-color: gray; color: white; }
+      .olive { background-color: olive; color: white;}
+      .purple { background-color: purple; color: white; }
+      .maroon { background-color: maroon; color: white; }
+      .aqua { background-color: aqua; }
+      .lime { background-color: lime; }
+      .teal { background-color: teal; color: white; }
+      .green { background-color: green; color: white; }
+      .blue { background-color: blue; color: white; }
+      .navy { background-color: navy; color: white; }
+      .black { background-color: black; color: white; }
+
+
+      /*APP CSS */
+
+  .CodeMirror {border: 1px solid black; font-size:13px}
+    #canvas_container {
+        width: 504px;
+        height: 504px;
+        position: relative;
+    }
+    #ref_canvas_container {
+        width: 504px;
+        height: 504px;
+        position: relative;
+    }
+    canvas {
+        position: absolute;
+        left: 0px;
+        right: 0px;
+    }
+
+    canvas#canvas {
+        z-index: 1;
+    }
+    canvas#grid_canvas {
+        z-index: 2;
+    }
+    canvas#ref_canvas {
+        z-index: 0;
+    }
+    canvas#sprite_canvas {
+        z-index: 3;
+    }
+
+    canvas#ref_image_canvas {
+        z-index: 0;
+    }
+    canvas#ref_grid_canvas {
+        z-index: 1;
+    }
+    div#canvas_container {
+        clear: both;
+    }
+    div#ref_canvas_container {
+        clear: both;
+    }
+    div#canvas_actions {
+        clear: both;
+        border: 1px solid black;
+    }
+    .input-medium {
+        width: 30px;
+    }
+
+    #oldcode {
+        border: 1px solid black;
+        font-family: monospace;
+        white-space: pre;
+        overflow: scroll;
+        padding: 4px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        height: 200px;
+        width:100%;
+    }
+
+    .spinner {
+        display: inline-block;
+        opacity: 0;
+        width: 0;
+
+        -webkit-transition: opacity 0.25s, width 0.25s;
+        -moz-transition: opacity 0.25s, width 0.25s;
+        -o-transition: opacity 0.25s, width 0.25s;
+        transition: opacity 0.25s, width 0.25s;
+    }
+
+    .has-spinner.active {
+        cursor:progress;
+    }
+
+    .has-spinner.active .spinner {
+        opacity: 1;
+        width: auto; /* This doesn't work, just fix for unkown width elements */
+    }
+
+    .has-spinner.btn-mini.active .spinner {
+        width: 10px;
+    }
+
+    .has-spinner.btn-small.active .spinner {
+        width: 13px;
+    }
+
+    .has-spinner.btn.active .spinner {
+        width: 16px;
+    }
+
+    .has-spinner.btn-large.active .spinner {
+        width: 19px;
+    }
+
+

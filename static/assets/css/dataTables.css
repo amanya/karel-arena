@@ -1,0 +1,84 @@
+/* dataTables */.dataTables_length {
+  margin-left: 8px;
+}
+.dataTables_length select {
+  width: 70px;
+  height: 25px;
+  padding: 2px 3px;
+}
+.dataTables_filter {
+  margin-right: 8px;
+  text-align: right;
+}
+.dataTables_filter input[type=text] {
+  width: 125px;
+  height: 18px;
+  line-height: 18px;
+}
+.dataTables_info {
+  margin: 0 0 0 12px;
+  font-size: 14px;
+}
+.dataTables_paginate {
+  text-align: right;
+}
+.dataTables_paginate.pagination {
+  margin: 0 12px;
+}
+.dataTables_wrapper label {
+  display: inline-block;
+  font-size: 13px;
+}
+.dataTables_wrapper input[type=text],
+.dataTables_wrapper select {
+  margin-bottom: 0 !important;
+  margin: 0 4px;
+}
+.dataTables_wrapper .row-fluid:first-child {
+  padding: 12px 0 4px;
+  background-color: #EFF3F8;
+}
+.dataTables_wrapper .row-fluid:first-child + .dataTable {
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+}
+.dataTables_wrapper .row-fluid:last-child {
+  border-top: 1px solid #DDD;
+  padding: 12px 0 6px;
+  background-color: #EFF3F8;
+  border-bottom: 1px solid #DDD;
+}
+.dataTable {
+  margin-bottom: 0;
+}
+.dataTable th[class*=sort] {
+  cursor: pointer;
+}
+.dataTable th[class*=sort]:after {
+  content: "\f0dc";
+  display: inline-block;
+  color: #555;
+  font-family: FontAwesome;
+  font-size: 13px;
+  font-weight: normal;
+  float: right;
+  margin-right: 4px;
+  position: relative;
+}
+.dataTable th[class*=sorting_] {
+  color: #307ECC;
+}
+.dataTable th.sorting_desc:after {
+  content: "\f0dd";
+  top: -6px;
+}
+.dataTable th.sorting_asc:after {
+  content: "\f0de";
+  top: 4px;
+}
+.dataTable th.sorting_disabled {
+  cursor: inherit;
+}
+.dataTable th.sorting_disabled:after {
+  display: none;
+}

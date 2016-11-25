@@ -1,4 +1,4 @@
-from pykarel.karel.karel_model import KarelModel
+from karel_model import KarelModel
 
 REDIS_CHAN = 'karel'
 
@@ -30,24 +30,33 @@ class Karel:
         cornerColorIs=2, random=2
     )
 
-    def __init__(self, app, redis):
+    def __init__(self, app, redis, handle):
         self.karel_model = KarelModel()
         self.app = app
         self.redis = redis
+        self.handle = handle
 
     def draw(self, c):
         pass
 
+    def turnLeft(self):
+        self.karel_model.turn_left(self.handle)
+        self.app.logger.info(str(self.handle))
+        command = '{"handle": "%s", "command": "turnLeft"}' % self.handle
+        self.app.logger.info(u'Inserting command: {}'.format(command))
+        self.redis.publish(REDIS_CHAN, command)
+        log("turnLeft")
+
     def move(self):
-        self.app.logger.info("Hello")
-        if self.karel_model.move():
-            command = '{"receiver": "karel-blue", "command": "move"}'
+        if self.karel_model.move(self.handle):
+            self.app.logger.info(str(self.handle))
+            command = '{"handle": "%s", "command": "move"}' % self.handle
             self.app.logger.info(u'Inserting command: {}'.format(command))
             self.redis.publish(REDIS_CHAN, command)
             log("move")
 
-    def load_world(self, text):
-        self.karel_model.load_world(text)
+    def load_world(self, world):
+        self.karel_model.load_world(world)
 
 
 INFINITY = 100000000

@@ -9,7 +9,7 @@ ig.module(
 .defines(function() {
 
 EntityKarel = ig.Entity.extend({
-    name: 'karel',
+    name: 'karel-blue',
     size: {x: 24, y: 24},
     animSheet: new ig.AnimationSheet('media/megaman_anim.png', 24, 24),
     offset: {x: 0, y: 0},
@@ -20,6 +20,7 @@ EntityKarel = ig.Entity.extend({
     type: ig.Entity.TYPE.A,
     checkAgainst: ig.Entity.TYPE.B,
     collides: ig.Entity.COLLIDES.ACTIVE,
+    action: '',
 
 
     init: function(x, y, settings) {
@@ -60,7 +61,8 @@ EntityKarel = ig.Entity.extend({
         this.movement.update();
         this.rotation.update();
 
-        if (ig.input.pressed('turnLeft')) {
+        if (this.action == 'turnLeft') {
+            this.action == '';
             switch (this.direction) {
                 case GridMovement.moveType.RIGHT:
                     this.rotation.destination = RotationMovement.moveType.NORTH;
@@ -108,9 +110,10 @@ EntityKarel = ig.Entity.extend({
                     break;
             }
         }
-        else if (ig.input.pressed('move')) {
+        else if (this.action == 'move') {
             this.movement.direction = this.direction;
             this.currentAnim = this.anims.run.rewind();
+            this.action = '';
         }
         else if (ig.input.pressed('exit')) {
             var exits = ig.game.getEntitiesByType('EntityExit');

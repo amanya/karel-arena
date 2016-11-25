@@ -3,7 +3,9 @@ from pykarel.karel_compiler import KarelCompiler
 
 code = """
 function main() {
+  repeat(2) {
     move();
+  }
 }
 """
 

@@ -7,6 +7,7 @@ from flask import Flask, render_template, send_from_directory
 from flask_sockets import Sockets
 from karel import Karel
 from pykarel.karel_compiler import KarelCompiler
+from impact_map import ImpactMap
 
 REDIS_URL = os.environ['REDIS_URL']
 REDIS_CHAN = 'karel'
@@ -24,6 +25,7 @@ class KarelBackend(object):
         self.clients = list()
         self.pubsub = redis.pubsub()
         self.pubsub.subscribe(REDIS_CHAN)
+        self.impact_map = ImpactMap(app.logger)
 
     def __iter_data(self):
         for message in self.pubsub.listen():
@@ -58,6 +60,11 @@ class KarelBackend(object):
 chats = KarelBackend()
 chats.start()
 
+karels = {}
+karels["karel-blue"] = Karel(app, redis, "karel-blue")
+karels["karel-green"] = Karel(app, redis, "karel-green")
+karels["karel-blue"].load_world(chats.impact_map.to_compiler())
+karels["karel-green"].load_world(chats.impact_map.to_compiler())
 
 @app.route('/')
 def hello():
@@ -73,6 +80,10 @@ def send_lib(path):
 def send_media(path):
     return send_from_directory('static/media', path)
 
+@app.route('/map')
+def send_map():
+    app.logger.info(u'Map: {}'.format(chats.impact_map.to_compiler()))
+    return str(chats.impact_map)
 
 @sockets.route('/submit')
 def inbox(ws):
@@ -84,13 +95,9 @@ def inbox(ws):
 
         if raw_message:
             message = json.loads(raw_message)
-            karel = Karel(app, redis)
-
-            with open('pykarel/world.json', 'r') as f:
-                karel.load_world(f.read())
 
             app.logger.info(u'Message: {}'.format(repr(message["text"])))
-            compiler = KarelCompiler(karel)
+            compiler = KarelCompiler(karels[message["handle"]])
 
             compiler.compile(str(message["text"]))
             while not compiler.execute_step():

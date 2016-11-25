@@ -1,24 +1,6 @@
 var timerExecuted = false;
 var editor = null;
 
-function sendEval(n){
-	var form1 = $('#evaluate')[0];
-	var fd1 = new FormData(form1);
-	if (n == 1){
-		satisfaction = "easy";
-	}else if(n == 2){
-		satisfaction = "normal";
-	}else{
-		satisfaction = "hard";
-	}
-	fd1.append("project[satisfaction]", satisfaction);
-	opinion = $("#opinion").val();
-   fd1.append("project[opinion]", opinion);
-   var xhr1 = new XMLHttpRequest();
-   xhr1.open(form1.method, form1.action, true);
-   xhr1.send(fd1);
-}
-
 $(document).ready(function() {
 
     // Support TLS-specific URLs, when appropriate.
@@ -33,8 +15,7 @@ $(document).ready(function() {
 
     inbox.onmessage = function(message) {
       var data = JSON.parse(message.data);
-      //ig.input.trigger(data.command);
-      GameInfo.command_buffer.push(data.command);
+      GameInfo.command_buffer[data.handle].push(data.command);
     };
 
     editor = CodeMirror.fromTextArea(document.getElementById('code'), {
@@ -45,12 +26,8 @@ $(document).ready(function() {
     var original_code = "function main(){\n\n}";
     var play_btn = document.getElementById('execute_btn');
     play_btn.onclick = function() {
-        $('#enunciat_tab, #enunciat').removeClass('active');
-        $('#treball_tab, #treball').addClass('active');
-
         try {
-          //var handle = $("#input-handle")[0].value;
-          var handle = "blue-karel";
+          var handle = $("#handle")[0].value;
           var text = editor.getValue();
           outbox.send(JSON.stringify({ handle: handle, text: text }));
           //ig.game.play(editor.getValue());
@@ -199,69 +176,6 @@ $(document).ready(function() {
                 }
             }
         }
-    });
-
-   $("#btn_opinion").click(function(){
-		if ($("#col_facil").attr("bgcolor") == "#14B2F6"){
-	    	sendEval(1);
-	   }else if($("#col_dificil").attr("bgcolor") == "#14B2F6"){
-	   	sendEval(3);
-	   }else{
-	   	sendEval(2);
-	   }
-	   $("#valoration").attr("style", "display: none");
-    });
-
-
-	$("#img_facil").click(function(){
-    	$("#col_facil").attr("bgcolor", "#14B2F6");
-    	$("#col_normal").attr("bgcolor", "");
-    	$("#col_dificil").attr("bgcolor", "");
-    	sendEval(1);
-    });
-
-	$("#img_normal").click(function(){
-    	$("#col_facil").attr("bgcolor", "");
-    	$("#col_normal").attr("bgcolor", "#14B2F6");
-    	$("#col_dificil").attr("bgcolor", "");
-    	sendEval(2);
-    });
-
-	$("#img_dificil").click(function(){
-    	$("#col_facil").attr("bgcolor", "");
-    	$("#col_normal").attr("bgcolor", "");
-    	$("#col_dificil").attr("bgcolor", "#14B2F6");
-    	sendEval(3);
-    });
-
-	 $("#img_facil").mouseover(function(){
-    	$("#img_facil").attr("height", "80");
-    	$("#img_facil").attr("width", "65");
-    });
-
-	 $("#img_facil").mouseout(function(){
-    	$("#img_facil").attr("height", "60");
-    	$("#img_facil").attr("width", "45");
-    });
-
-    $("#img_normal").mouseover(function(){
-    	$("#img_normal").attr("height", "80");
-    	$("#img_normal").attr("width", "65");
-    });
-
-	 $("#img_normal").mouseout(function(){
-    	$("#img_normal").attr("height", "60");
-    	$("#img_normal").attr("width", "45");
-    });
-
-    $("#img_dificil").mouseover(function(){
-    	$("#img_dificil").attr("height", "80");
-    	$("#img_dificil").attr("width", "65");
-    });
-
-	 $("#img_dificil").mouseout(function(){
-    	$("#img_dificil").attr("height", "60");
-    	$("#img_dificil").attr("width", "45");
     });
 
 });

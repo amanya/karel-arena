@@ -24,7 +24,10 @@ GameInfo = new function() {
     this.beepers = 0;
     this.finished = false;
     this.timeOut = false;
-    this.command_buffer = [];
+    this.command_buffer = {
+        'karel-blue': [],
+        'karel-green': [],
+    };
 },
 
 MyGame = ig.Game.extend({
@@ -60,7 +63,6 @@ MyGame = ig.Game.extend({
         	GameInfo.maxTimeTimer = new ig.Timer(max_time);
         }
         this.animating = false;
-        //this.karel = new Karel();
         if (!GameInfo.finished) {
             GameInfo.beepers = 0;
             this.requireLevel(level_name, null);
@@ -77,68 +79,28 @@ MyGame = ig.Game.extend({
     },
 
 	update: function() {
-        var karels = ig.game.getEntitiesByType('EntityKarel');
-        var karel = karels[0];
-        if(karel) {
-            if(!this.animating && GameInfo.command_buffer.length > 0 && !karel.movement.isMoving()) {
-                this.animating = true;
-                var command = GameInfo.command_buffer.shift();
-                ig.input.trigger(command);
-            } else {
-                if(GameInfo.command_buffer.length > 0) {
-                    this.animating = false;
+        var a = ig.game.getEntityByName('karel-blue');
+
+        karel_ids = ['karel-blue', 'karel-green'];
+        for(var i = 0; i < karel_ids.length ; i++) {
+            var karel_id = karel_ids[i];
+            var karel = ig.game.getEntityByName(karel_id);
+            if(karel) {
+                if(!this.animating && GameInfo.command_buffer[karel_id].length > 0 && !karel.movement.isMoving()) {
+                    this.animating = true;
+                    var command = GameInfo.command_buffer[karel_id].shift();
+                    if(karel.name == karel_id) {
+                        karel.action = command;
+                    }
+                } else {
+                    if(GameInfo.command_buffer[karel_id].length > 0) {
+                        this.animating = false;
+                    }
                 }
             }
         }
 		this.parent();
 	},
-
-    defineWorld: function(code) {
-        var world_text = "";
-        var map = ig.game.backgroundMaps[0];
-        world_text += "Dimension: (" + map.height + ", " + map.width + ")\n";
-        var karels = ig.game.getEntitiesByType('EntityKarel');
-        var pos = this.getEntityWorldPos(karels[0]);
-        world_text += "Karel: (" + pos.row + ", " + pos.col + ")\n";
-        var exits = ig.game.getEntitiesByType('EntityExit');
-        pos = this.getEntityWorldPos(exits[0]);
-        world_text += "Exit: (" + pos.row + ", " + pos.col + ")\n";
-        var beepers = ig.game.getEntitiesByType('EntityBeeper');
-        for(var n=0; n<beepers.length; n++) {
-            pos = this.getEntityWorldPos(beepers[n]);
-            world_text += "Beeper: (" + pos.row + ", " + pos.col + ")\n";
-        }
-        var trays = ig.game.getEntitiesByType('EntityTray');
-        for(var n=0; n<trays.length; n++) {
-            pos = this.getEntityWorldPos(trays[n]);
-            var cap = trays[n].capacity;
-            world_text += "Tray: (" + pos.row + ", " + pos.col + ", " + cap + ")\n";
-            if(trays[n].initialBeepers > 0) {
-                for(var m=0; m<trays[n].initialBeepers; m++) {
-                    world_text += "Beeper: (" + pos.row + ", " + pos.col + ")\n";
-                }
-            }
-        }
-        var collision = ig.game.collisionMap;
-        for(var height = 0; height<collision.height; height++) {
-            for(var width = 0; width<collision.width; width++) {
-                if(collision.data[height][width] == 1) {
-                    world_text += "Wall: (" + width + ", " + height + ")\n";
-                }
-            }
-        }
-        return world_text;
-    },
-
-    loadWorld: function(code) {
-        //this.compileEngine = KarelCompiler(this.karel);
-        //this.compileEngine.compile(code);
-        //this.karel.loadWorld(this.defineWorld());
-    },
-
-    play: function() {
-        ig.system.setGame(MyGame);
-    },
 
 	draw: function() {
     if (GameInfo.finished) return;
@@ -161,7 +123,7 @@ MyGame = ig.Game.extend({
         } else {
             var _this = this;
 
-            $.getScript('lib/game/levels/' + levelName + '.js', function() {
+            $.getScript('/map', function() {
 
                 _this.loadLevel(ig.global[levelObjectName]);
 

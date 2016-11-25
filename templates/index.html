@@ -26,11 +26,13 @@
       </div>
     </div>
         <div class="tab-pane active karel-editor" id="editor">
+            <input type="text" name="handle" id="handle" value="karel-blue">
             <textarea name="code" id="code" rows="80" cols="20">function main() {
-    turnLeft();
-    move();
-}
-          </textarea>
+  move();
+  move();
+  turnLeft();
+  move();
+}</textarea>
           <br/>
           	<div visible="yes" id="button-pack" class="row-fluid">
             <div>
@@ -63,9 +65,6 @@
 </div>
 <script src="static/media/bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript">
-  var pc_name = 'test';
-  var card_id = 1;
-  var form_authenticity_token = '';
   var level_name = 'level0';
   var max_instr = 10;
   var max_time = 100;
@@ -79,14 +78,6 @@
   if (isNaN(num_beepers)) {
     num_beepers = 0;
   }
-  function showtext(name) {
-          var obj = name.getAttribute("title");
-          if ($("#"+obj).css('display') == "none"){
-          $("#"+obj).show();
-          } else{
-          $("#"+obj).hide();
-          }
-          }
 </script>
 <script src="static/assets/js/jwerty/jwerty.js"></script>
 <script src="static/assets/js/bootbox.min.js"></script>

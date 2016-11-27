@@ -36,7 +36,6 @@ MyGame = ig.Game.extend({
     font: new ig.Font('media/font.png'),
     worldCellSize: 24,
     animating: false,
-    compileEngine: null,
     karel: null,
     ival: null,
 
@@ -149,22 +148,6 @@ LevelEnd = ig.Game.extend({
     levelEndImage: new ig.Image('media/levelEnd.png'),
 
     init: function() {
-        var form = $('#edit_project')[0];
-        var fd = new FormData(form);
-        fd.append("project[code]", editor.getValue());
-        fd.append("project[instr_cnt]", 0);
-        var time_left = Math.round(Math.abs(GameInfo.maxTimeTimer.delta()));
-        fd.append("time_left", time_left);
-        fd.append("project[beepers_cnt]", GameInfo.beepers);
-        var xhr = new XMLHttpRequest();
-        xhr.open(form.method, form.action, true);
-        var that = this;
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            that.karel_check()
-          }
-        };
-        xhr.send(fd);
     },
 
     draw: function() {
@@ -177,25 +160,12 @@ LevelEnd = ig.Game.extend({
         else {
             font.draw('LEVEL FAILED', 100, 100);
         }
-        GameInfo.finished = true;
+        //GameInfo.finished = true;
     },
 
-    karel_check: function() {
-      $.ajax({
-        type: 'GET',
-        dataType: "json",
-        data: {
-          id: card_id,
-          game_success: this.successful()
-        },
-        url: '/karel_check',
-        error: default_process_project_error_handler,
-        success: process_project_result
-      });
-    }
 });
 
 
-ig.main( '#canvas', MyGame, 60, 480, 480, 2 );
+ig.main( '#canvas', MyGame, 60, 480, 480, 1 );
 
 });

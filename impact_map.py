@@ -15,11 +15,15 @@ LevelLevel0Resources=[new ig.Image('media/tileset.png')];
 def to_map(coord):
     return coord / 24
 
+def from_map(coord):
+    return coord * 24
+
 class ImpactMap:
     def __init__(self, logger):
         self.logger = logger
         with open('static/lib/game/levels/level0.js') as f:
             self.impact_map = json.loads(re.search('\/\*JSON\[\*\/(.+?)\/\*\]JSON\*\/', f.read()).group(1))
+        self.karel_initial_positions = self.get_initial_positions()
 
     def __str__(self):
         return START + json.dumps(self.impact_map) + END
@@ -49,6 +53,22 @@ class ImpactMap:
                 beepers.append((to_map(entity["x"]), to_map(entity["y"])))
         return beepers
 
+    def get_initial_positions(self):
+        karels = {}
+        for entity in self.impact_map["entities"]:
+            if entity["type"] == "EntityKarel":
+                handle = entity["settings"]["name"]
+                karels[handle] = [entity["y"], entity["x"]]
+        return karels
+
+    def reset_karel(self, handle):
+        for entity in self.impact_map["entities"]:
+            if entity["type"] == "EntityKarel":
+                entity_name = entity["settings"]["name"]
+                if entity_name == handle:
+                    entity["y"] = self.karel_initial_positions[handle][0]
+                    entity["x"] = self.karel_initial_positions[handle][1]
+
     def get_karels(self):
         karels = []
         for entity in self.impact_map["entities"]:
@@ -63,6 +83,15 @@ class ImpactMap:
         world["beepers"] = self.get_beepers()
         world["karels"] = self.get_karels()
         return world
+
+    def from_compiler(self, world):
+        for entity in self.impact_map["entities"]:
+            if entity["type"] == "EntityKarel":
+                entity_name = entity["settings"]["name"]
+                for karel in world["karels"]:
+                    if karel[0] == entity_name:
+                        entity["y"] = from_map(karel[1])
+                        entity["x"] = from_map(karel[2])
 
 
 if __name__ == '__main__':

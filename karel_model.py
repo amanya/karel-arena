@@ -19,6 +19,9 @@ class KarelEntity:
         self.col = col
         self.dir = dir
 
+    def __str__(self):
+        return "Karel '{}' at {}, {} facing {}".format(self.handle, self.row, self.col, self.dir) 
+
 class KarelModel:
     def __init__(self):
         self.beepers = None
@@ -146,3 +149,16 @@ class KarelModel:
 
         for karel in world["karels"]:
             self.karels[karel[0]] = KarelEntity(karel[0], karel[1], karel[2], KAREL_EAST)
+
+    def dump_world(self):
+        world = {}
+        world["dimension"] = [self.rows, self.cols]
+        world["beepers"] = []
+        world["walls"] = self.walls.dump_walls()
+        world["karels"] = []
+        for karel in self.karels.values():
+            log("karel: {}".format(karel))
+            world["karels"].append([karel.handle, karel.row, karel.col, karel.dir])
+        return world
+
+

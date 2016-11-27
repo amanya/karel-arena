@@ -41,7 +41,6 @@ class Karel:
 
     def turnLeft(self):
         self.karel_model.turn_left(self.handle)
-        self.app.logger.info(str(self.handle))
         command = '{"handle": "%s", "command": "turnLeft"}' % self.handle
         self.app.logger.info(u'Inserting command: {}'.format(command))
         self.redis.publish(REDIS_CHAN, command)
@@ -52,7 +51,6 @@ class Karel:
 
     def move(self):
         if self.karel_model.move(self.handle):
-            self.app.logger.info(str(self.handle))
             command = '{"handle": "%s", "command": "move"}' % self.handle
             self.app.logger.info(u'Inserting command: {}'.format(command))
             self.redis.publish(REDIS_CHAN, command)
@@ -60,6 +58,9 @@ class Karel:
 
     def load_world(self, world):
         self.karel_model.load_world(world)
+
+    def dump_world(self):
+        return self.karel_model.dump_world()
 
 
 INFINITY = 100000000

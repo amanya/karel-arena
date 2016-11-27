@@ -10,6 +10,8 @@ ig.module(
 
 EntityKarel = ig.Entity.extend({
     name: 'karel-blue',
+    initial_pos: {x: 0, y: 0},
+    initial_dir: null,
     size: {x: 24, y: 24},
     animSheet: new ig.AnimationSheet('media/megaman_anim.png', 24, 24),
     offset: {x: 0, y: 0},
@@ -25,10 +27,12 @@ EntityKarel = ig.Entity.extend({
 
     init: function(x, y, settings) {
         this.parent(x, y, settings);
+        this.initial_pos = {x: x, y: y};
         this.movement = new GridMovement(this);
         this.movement.speed = {x: 150, y: 150};
         this.rotation = new RotationMovement();
         this.direction = GridMovement.moveType.RIGHT;
+        this.initial_dir = this.direction
         //this.movement.direction = GridMovement.moveType.RIGHT;
         this.addAnim('idle', 1, [0]);
         this.addAnim('start', 0.1, [0, -1]);
@@ -39,29 +43,16 @@ EntityKarel = ig.Entity.extend({
     },
 
     kill: function() {
-        //ig.game.spawnEntity('EntityKarelDying', this.pos.x-8, this.pos.y-8);
-        ig.game.animating = false;
-        if (ig.game.compileEngine !== null) {
-            ig.game.compileEngine.vm.cf = null;
-            var done = false;
-            while(!done) {
-                done = ig.game.compileEngine.executeStep();
-            }
-        }
-        ig.game.init();
         this.parent();
     },
 
     update: function() {
         this.parent();
-        if (GameInfo.maxTimeTimer && GameInfo.maxTimeTimer.delta() > -1) {
-            GameInfo.timeOut = true;
-            ig.system.setGame(LevelEnd);
-        }
         this.movement.update();
         this.rotation.update();
 
         if (this.action == 'turnLeft') {
+            this.action = '';
             switch (this.direction) {
                 case GridMovement.moveType.RIGHT:
                     this.rotation.destination = RotationMovement.moveType.NORTH;
@@ -75,7 +66,7 @@ EntityKarel = ig.Entity.extend({
                     break;
                 case GridMovement.moveType.LEFT:
                     this.rotation.destination = RotationMovement.moveType.SOUTH;
-                    this.currentAnim = this.anims.down;
+                    this.currentAnim = this.anims.idle;
                     this.direction = GridMovement.moveType.DOWN;
                     break;
                 case GridMovement.moveType.DOWN:
@@ -84,9 +75,9 @@ EntityKarel = ig.Entity.extend({
                     this.direction = GridMovement.moveType.RIGHT;
                     break;
             }
-            this.action = '';
         }
-        if (ig.input.pressed('turnRight')) {
+        else if (this.action == 'turnRight') {
+            this.action = '';
             switch (this.direction) {
                 case GridMovement.moveType.LEFT:
                     this.rotation.destination = RotationMovement.moveType.NORTH;
@@ -100,7 +91,7 @@ EntityKarel = ig.Entity.extend({
                     break;
                 case GridMovement.moveType.RIGHT:
                     this.rotation.destination = RotationMovement.moveType.SOUTH;
-                    this.currentAnim = this.anims.down;
+                    this.currentAnim = this.anims.idle;
                     this.direction = GridMovement.moveType.DOWN;
                     break;
                 case GridMovement.moveType.UP:
@@ -115,7 +106,16 @@ EntityKarel = ig.Entity.extend({
             this.currentAnim = this.anims.run.rewind();
             this.action = '';
         }
-        else if (ig.input.pressed('exit')) {
+        else if (this.action == 'die') {
+            this.action = '';
+            this.pos.x = this.initial_pos.x;
+            this.pos.y = this.initial_pos.y;
+            this.direction = this.initial_dir;
+            this.rotation.destination = RotationMovement.moveType.EAST;
+            this.rotation.setCurrentAngle();
+        }
+        else if (this.action == 'exit') {
+            this.action = '';
             var exits = ig.game.getEntitiesByType('EntityExit');
             for (var n = 0; n < exits.length; n++) {
                 var distance = this.distanceTo(exits[n]);
@@ -131,7 +131,8 @@ EntityKarel = ig.Entity.extend({
                 }
             }
         }
-        else if (ig.input.pressed('pickBeeper')) {
+        else if (this.action == 'pickBeeper') {
+            this.action = '';
             var beepers = ig.game.getEntitiesByType('EntityBeeper');
             for (var n = 0; n < beepers.length; n++) {
                 var distance = this.distanceTo(beepers[n]);
@@ -142,14 +143,16 @@ EntityKarel = ig.Entity.extend({
                 }
             }
         }
-        else if (ig.input.pressed('putBeeper')) {
+        else if (this.action == 'putBeeper') {
+            this.action = '';
             if (GameInfo.beepers > 0) {
                 GameInfo.beepers--;
                 ig.game.spawnEntity('EntityBeeper', this.pos.x, this.pos.y);
             }
 
         }
-        else if (ig.input.pressed('putBeeperInTray')) {
+        else if (this.action == 'putBeeperInTray') {
+            this.action = '';
             var trays = ig.game.getEntitiesByType('EntityTray');
             for (var n = 0; n < trays.length; n++) {
                 var distance = this.distanceTo(trays[n]);
@@ -165,7 +168,8 @@ EntityKarel = ig.Entity.extend({
                 }
             }
         }
-        else if (ig.input.pressed('pickBeeperFromTray')) {
+        else if (this.action == 'pickBeeperFromTray') {
+            this.action = '';
             var trays = ig.game.getEntitiesByType('EntityTray');
             for (var n = 0; n < trays.length; n++) {
                 var distance = this.distanceTo(trays[n]);

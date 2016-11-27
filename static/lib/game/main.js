@@ -196,6 +196,6 @@ LevelEnd = ig.Game.extend({
 });
 
 
-ig.main( '#canvas', MyGame, 60, 480, 480, 1 );
+ig.main( '#canvas', MyGame, 60, 480, 480, 2 );
 
 });

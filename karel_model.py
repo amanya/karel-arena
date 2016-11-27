@@ -114,7 +114,8 @@ class KarelModel:
     def beepers_present(self):
         return self.beepers.beeper_present(self.karel_row, self.karel_col)
 
-    def front_is_clear(self, handle):
+    def frontIsClear(self, handle):
+        log('frontIsClear')
         new_row = self.karels[handle].row
         new_col = self.karels[handle].col
         if self.karels[handle].dir is KAREL_EAST:

@@ -1,25 +1,44 @@
+import json
+
 from pykarel.karel.karel import Karel
 from pykarel.karel_compiler import KarelCompiler
-
-code = """
-function main() {
-  repeat(2) {
-    move();
-  }
-}
-"""
 
 
 def main():
     karel = Karel()
     compiler = KarelCompiler(karel)
 
-    with open('pykarel/world.json', 'r') as f:
-        karel.load_world(f.read())
+    code = """
+        function main() {
+           if(frontIsClear()){
+               move();
+           } else {
+               turnLeft();
+               turnLeft();
+               turnLeft();
+               move();
+           }
+        }
+    """
 
+    world = {
+        "dimension": [2, 2],
+        "walls": [
+            [0, 1],
+        ],
+        "karels": [
+            [0, 0, "EAST"],
+        ],
+        "beepers": [],
+    }
+
+    karel.load_world(json.dumps(world))
     compiler.compile(code)
     while not compiler.execute_step():
-        print "hello"
+        pass
+
+    assert karel.karel_model.karel_row == 1
+    assert karel.karel_model.karel_col == 0
 
 if __name__ == '__main__':
     main()

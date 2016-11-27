@@ -27,11 +27,18 @@
     </div>
         <div class="tab-pane active karel-editor" id="editor">
             <input type="text" name="handle" id="handle" value="karel-blue">
-            <textarea name="code" id="code" rows="80" cols="20">function main() {
-  move();
-  move();
-  turnLeft();
-  move();
+            <textarea name="code" id="code" rows="80" cols="20">function safeMove(){
+  if(frontIsClear()){
+    move();
+  } else {
+    turnLeft();
+    move();
+  }
+}
+function main() {
+  repeat(5) {
+    safeMove();
+  }
 }</textarea>
           <br/>
           	<div visible="yes" id="button-pack" class="row-fluid">

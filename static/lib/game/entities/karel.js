@@ -62,7 +62,6 @@ EntityKarel = ig.Entity.extend({
         this.rotation.update();
 
         if (this.action == 'turnLeft') {
-            this.action == '';
             switch (this.direction) {
                 case GridMovement.moveType.RIGHT:
                     this.rotation.destination = RotationMovement.moveType.NORTH;
@@ -85,6 +84,7 @@ EntityKarel = ig.Entity.extend({
                     this.direction = GridMovement.moveType.RIGHT;
                     break;
             }
+            this.action = '';
         }
         if (ig.input.pressed('turnRight')) {
             switch (this.direction) {

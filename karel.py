@@ -47,6 +47,9 @@ class Karel:
         self.redis.publish(REDIS_CHAN, command)
         log("turnLeft")
 
+    def frontIsClear(self):
+        return self.karel_model.frontIsClear(self.handle)
+
     def move(self):
         if self.karel_model.move(self.handle):
             self.app.logger.info(str(self.handle))

@@ -57,14 +57,14 @@ class KarelBackend(object):
         gevent.spawn(self.run)
 
 
-chats = KarelBackend()
-chats.start()
+game = KarelBackend()
+game.start()
 
 karels = {}
 karels["karel-blue"] = Karel(app, redis, "karel-blue")
 karels["karel-green"] = Karel(app, redis, "karel-green")
-karels["karel-blue"].load_world(chats.impact_map.to_compiler())
-karels["karel-green"].load_world(chats.impact_map.to_compiler())
+karels["karel-blue"].load_world(game.impact_map.to_compiler())
+karels["karel-green"].load_world(game.impact_map.to_compiler())
 
 @app.route('/')
 def hello():
@@ -82,8 +82,8 @@ def send_media(path):
 
 @app.route('/map')
 def send_map():
-    app.logger.info(u'Map: {}'.format(chats.impact_map.to_compiler()))
-    return str(chats.impact_map)
+    app.logger.info(u'Map: {}'.format(game.impact_map.to_compiler()))
+    return str(game.impact_map)
 
 @sockets.route('/submit')
 def inbox(ws):
@@ -107,7 +107,7 @@ def inbox(ws):
 @sockets.route('/receive')
 def outbox(ws):
     """Sends outgoing chat messages, via `ChatBackend`."""
-    chats.register(ws)
+    game.register(ws)
 
     while not ws.closed:
         # Context switch while `ChatBackend.start` is running in the background.

@@ -103,6 +103,15 @@ class KarelModel:
             return False
         return True
 
+    def put_beeper(self, handle):
+        if self.karels[handle].bag > 0:
+            self.beepers.put_beeper(self.karels[handle].col, self.karels[handle].row)
+            self.karels[handle].bag -= 1
+        else:
+            error("Not carrying any beeper")
+            return False
+        return True
+
     def get_direction(self, handle):
         return self.karels[handle].dir
 

@@ -20,8 +20,8 @@ EntityKarel = ig.Entity.extend({
     justBornTimer: null,
     maxVel: {x: 150, y: 150},
     type: ig.Entity.TYPE.A,
-    checkAgainst: ig.Entity.TYPE.B,
-    collides: ig.Entity.COLLIDES.ACTIVE,
+    checkAgainst: null,
+    collides: ig.Entity.COLLIDES.NEVER,
     action: '',
 
 

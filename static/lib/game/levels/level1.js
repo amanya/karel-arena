@@ -1,6 +1,0 @@
-ig.module( 'game.levels.level1' )
-.requires( 'impact.image','game.entities.beeper','game.entities.karel' )
-.defines(function(){
-LevelLevel1=/*JSON[*/{"entities":[{"type":"EntityBeeper","x":240,"y":288},{"type":"EntityKarel","x":48,"y":384}],"layer":[{"name":"level0","width":10,"height":10,"linkWithCollision":false,"visible":1,"tilesetName":"media/tileset.png","repeat":false,"preRender":false,"distance":"1","tilesize":48,"foreground":false,"data":[[4,4,4,4,4,4,4,4,4,4],[4,6,6,6,6,6,6,6,6,4],[4,6,6,6,6,6,6,6,6,4],[4,6,6,6,6,6,6,6,6,4],[4,6,6,6,6,6,6,6,6,4],[4,6,6,6,6,6,6,6,6,4],[4,6,6,6,6,6,6,6,6,4],[4,6,6,6,6,6,6,6,6,4],[4,6,6,6,6,6,6,6,6,4],[4,4,4,4,4,4,4,4,4,4]]},{"name":"collision","width":10,"height":10,"linkWithCollision":false,"visible":true,"tilesetName":"lib/weltmeister/collisiontiles-64.png","repeat":false,"preRender":false,"distance":"1","tilesize":48,"foreground":false,"data":[[1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1]]}]}/*]JSON*/;
-LevelLevel1Resources=[new ig.Image('media/tileset.png')];
-});

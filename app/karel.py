@@ -46,8 +46,18 @@ class Karel:
         self.redis.publish(REDIS_CHAN, command)
         log("turnLeft")
 
+    def turnRight(self):
+        self.karel_model.turn_right(self.handle)
+        command = '{"handle": "%s", "command": "turnRight"}' % self.handle
+        self.app.logger.info(u'Inserting command: {}'.format(command))
+        self.redis.publish(REDIS_CHAN, command)
+        log("turnRight")
+
     def frontIsClear(self):
         return self.karel_model.frontIsClear(self.handle)
+
+    def beepersPresent(self):
+        return self.karel_model.beepers_present(self.handle)
 
     def move(self):
         if self.karel_model.move(self.handle):

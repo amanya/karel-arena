@@ -75,7 +75,7 @@ class KarelModel:
             error("invalid dir: {}".format(self.dir))
         self.karels[handle].dir = new_d
 
-    def turn_right(self):
+    def turn_right(self, handle):
         new_d = self.karels[handle].dir
         if self.karels[handle].dir == KAREL_EAST:
             new_d = KAREL_SOUTH
@@ -114,8 +114,8 @@ class KarelModel:
     def has_wall(self, row, col):
         return self.walls.get_wall(row, col)
 
-    def beepers_present(self):
-        return self.beepers.beeper_present(self.karel_row, self.karel_col)
+    def beepers_present(self, handle):
+        return self.beepers.beeper_present(self.get_karel_row(handle), self.get_karel_col(handle))
 
     def frontIsClear(self, handle):
         log('frontIsClear')

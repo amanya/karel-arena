@@ -18,9 +18,10 @@ class KarelEntity:
         self.row = row
         self.col = col
         self.dir = dir
+        self.bag = 0
 
     def __str__(self):
-        return "Karel '{}' at {}, {} facing {}".format(self.handle, self.row, self.col, self.dir) 
+        return "Karel '{}' at {}, {} facing {} having {} beepers".format(self.handle, self.row, self.col, self.dir, self.bag)
 
 class KarelModel:
     def __init__(self):
@@ -92,6 +93,15 @@ class KarelModel:
         else:
             error("invalid dir: {}".format(self.dir))
         self.karels[handle].dir = new_d
+
+    def pick_beeper(self, handle):
+        if self.beepers.beeper_present(self.karels[handle].col, self.karels[handle].row):
+            self.beepers.pick_beeper(self.karels[handle].col, self.karels[handle].row)
+            self.karels[handle].bag += 1
+        else:
+            error("No beepers present")
+            return False
+        return True
 
     def get_direction(self, handle):
         return self.karels[handle].dir

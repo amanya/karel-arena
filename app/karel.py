@@ -66,6 +66,18 @@ class Karel:
             self.redis.publish(REDIS_CHAN, command)
             log("move")
 
+    def pickBeeper(self):
+        if self.karel_model.pick_beeper(self.handle):
+            command = '{"handle": "%s", "command": "pickBeeper"}' % self.handle
+            self.app.logger.info(u'Inserting command: {}'.format(command))
+            self.redis.publish(REDIS_CHAN, command)
+            log("pickBeeper")
+        else:
+            command = '{"handle": "%s", "command": "die"}' % self.handle
+            self.app.logger.info(u'Inserting command: {}'.format(command))
+            self.redis.publish(REDIS_CHAN, command)
+            log("die")
+
     def load_world(self, world):
         self.karel_model.load_world(world)
 

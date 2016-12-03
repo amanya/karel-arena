@@ -38,7 +38,6 @@ def inbox(ws):
             if True:
                 command = '{"handle": "%s", "command": "die"}' % handle
                 game.logger.info(u'Inserting command: {}'.format(command))
-                game.logger.info(u'REDIS: {}'.format(current_app.config['REDIS_CHAN']))
 
                 redis.publish(current_app.config['REDIS_CHAN'], command)
 

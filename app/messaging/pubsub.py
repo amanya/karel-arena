@@ -31,19 +31,24 @@ def inbox(ws):
             game.logger.info(u'Message: {}'.format(repr(message["text"])))
             compiler = KarelCompiler(karels[handle])
 
-            compiler.compile(str(message["text"]))
-            while not compiler.execute_step():
-                pass
+            try:
+                compiler.compile(str(message["text"]))
+            except Exception, e:
+                msg = json.dumps({"error": "%s" % e})
+                redis.publish(current_app.config['REDIS_CHAN'], msg)
+            else:
+                while not compiler.execute_step():
+                    pass
 
-            if True:
-                command = '{"handle": "%s", "command": "die"}' % handle
-                game.logger.info(u'Inserting command: {}'.format(command))
+                if True:
+                    command = '{"handle": "%s", "command": "die"}' % handle
+                    game.logger.info(u'Inserting command: {}'.format(command))
 
-                redis.publish(current_app.config['REDIS_CHAN'], command)
+                    redis.publish(current_app.config['REDIS_CHAN'], command)
 
-                game.impact_map.from_compiler(karels[handle].dump_world())
-                game.impact_map.reset_karel(handle)
-                karels[handle].load_world(game.impact_map.to_compiler())
+                    game.impact_map.from_compiler(karels[handle].dump_world())
+                    game.impact_map.reset_karel(handle)
+                    karels[handle].load_world(game.impact_map.to_compiler())
 
 
 @messaging.route('/receive')

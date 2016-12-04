@@ -14,8 +14,16 @@ $(document).ready(function() {
     var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/submit");
 
     inbox.onmessage = function(message) {
-      var data = JSON.parse(message.data);
-      GameInfo.command_buffer[data.handle].push(data.command);
+        var data = JSON.parse(message.data);
+        if("error" in data) {
+            $("#error").fadeIn("slow");
+            $("#error_msg").html("<strong>" + data.error + "</strong>");
+            setTimeout(function(){
+                $("#error").fadeOut("slow");
+            }, 10000);
+        } else {
+            GameInfo.command_buffer[data.handle].push(data.command);
+        }
     };
 
     editor = CodeMirror.fromTextArea(document.getElementById('code'), {

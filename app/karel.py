@@ -2,10 +2,6 @@ from app.karel_backend import REDIS_CHAN
 from karel_model import KarelModel
 
 
-def log(text):
-    print(text)
-
-
 class Karel:
     instructions = dict(
         move=1, turnLeft=1, putBeeper=1, pickBeeper=1,
@@ -42,7 +38,6 @@ class Karel:
         msg = '{"handle": "%s", "command": "%s"}' % (self.handle, command)
         self.app.logger.info(u'Inserting command: {}'.format(msg))
         self.redis.publish(REDIS_CHAN, msg)
-        log(command)
 
     def turnLeft(self):
         self.karel_model.turn_left(self.handle)

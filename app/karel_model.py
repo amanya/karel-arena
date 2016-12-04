@@ -1,6 +1,7 @@
 import json
 
 from pykarel.karel.beepers import Beepers
+from pykarel.karel.exits import Exits
 from pykarel.karel.karel_constants import KAREL_EAST, KAREL_WEST, KAREL_NORTH, KAREL_SOUTH
 from pykarel.karel.trays import Trays
 from pykarel.karel.walls import Walls
@@ -171,6 +172,9 @@ class KarelModel:
     def tray_complete(self, handle):
         return self.trays.tray_is_complete(self.get_karel_row(handle), self.get_karel_col(handle))
 
+    def exit_present(self, handle):
+        return self.exits.exit_present(self.get_karel_row(handle), self.get_karel_col(handle))
+
     def front_is_clear(self, handle):
         log('frontIsClear')
         new_row = self.karels[handle].row
@@ -195,6 +199,7 @@ class KarelModel:
         self.beepers = Beepers(self.rows, self.cols)
         self.walls = Walls(self.rows, self.cols)
         self.trays = Trays(self.rows, self.cols)
+        self.exits = Exits(self.rows, self.cols)
 
         for beeper in world["beepers"]:
             self.beepers.put_beeper(beeper[0], beeper[1])
@@ -204,6 +209,9 @@ class KarelModel:
 
         for tray in world["trays"]:
             self.trays.add_tray(tray[0], tray[1], tray[2], tray[3], tray[4])
+
+        for exit in world["exits"]:
+            self.exits.add_exit(exit[0], exit[1])
 
         for karel in world["karels"]:
             self.karels[karel[0]] = KarelEntity(karel[0], karel[1], karel[2], KAREL_EAST)
@@ -218,5 +226,3 @@ class KarelModel:
             log("karel: {}".format(karel))
             world["karels"].append([karel.handle, karel.row, karel.col, karel.dir])
         return world
-
-

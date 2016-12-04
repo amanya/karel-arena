@@ -40,21 +40,10 @@
     }
     move();
   }
-  while(frontIsClear()){
+  while(noExitPresent()){
     move();
   }
-  turnRight();
-  turnRight();
-  while(noTrayPresent()){
-    move();
-  }
-  while(trayNotEmpty()){
-    pickBeeperFromTray();
-  }
-  repeat(3){
-    move();
-    putBeeper();
-  }
+  exit();
 }</textarea>
           <br/>
           	<div visible="yes" id="button-pack" class="row-fluid">

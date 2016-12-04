@@ -91,12 +91,25 @@ class Karel:
     def trayNotComplete(self):
         return not self.karel_model.tray_complete(self.handle)
 
+    def exitPresent(self):
+        return self.karel_model.exit_present(self.handle)
+
+    def noExitPresent(self):
+        return not self.karel_model.exit_present(self.handle)
+
     def move(self):
         if self.karel_model.move(self.handle):
             command = '{"handle": "%s", "command": "move"}' % self.handle
             self.app.logger.info(u'Inserting command: {}'.format(command))
             self.redis.publish(REDIS_CHAN, command)
             log("move")
+
+    def exit(self):
+        if self.karel_model.exit(self.handle):
+            command = '{"handle": "%s", "command": "exit"}' % self.handle
+            self.app.logger.info(u'Inserting command: {}'.format(command))
+            self.redis.publish(REDIS_CHAN, command)
+            log("exit")
 
     def pickBeeper(self):
         if self.karel_model.pick_beeper(self.handle):

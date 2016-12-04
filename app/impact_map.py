@@ -91,6 +91,18 @@ class ImpactMap:
                 )
         return trays
 
+    def get_exits(self):
+        exits = []
+        for entity in self.impact_map["entities"]:
+            if entity["type"] == "EntityExit":
+                exits.append(
+                    (
+                        to_map(entity["y"]),
+                        to_map(entity["x"]),
+                    )
+                )
+        return exits
+
     def to_compiler(self):
         world = {}
         world["dimension"] = self.get_dimension()
@@ -98,6 +110,7 @@ class ImpactMap:
         world["beepers"] = self.get_beepers()
         world["karels"] = self.get_karels()
         world["trays"] = self.get_trays()
+        world["exits"] = self.get_exits()
         return world
 
     def from_compiler(self, world):

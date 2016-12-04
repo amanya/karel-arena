@@ -14,6 +14,7 @@ def error(txt):
 def log(txt):
     print(txt)
 
+
 class KarelEntity:
     def __init__(self, handle, row, col, dir):
         self.handle = handle
@@ -23,7 +24,9 @@ class KarelEntity:
         self.bag = 0
 
     def __str__(self):
-        return "Karel '{}' at {}, {} facing {} having {} beepers".format(self.handle, self.row, self.col, self.dir, self.bag)
+        return "Karel '{}' at {}, {} facing {} having {} beepers".format(self.handle, self.row, self.col, self.dir,
+                                                                         self.bag)
+
 
 class KarelModel:
     def __init__(self):

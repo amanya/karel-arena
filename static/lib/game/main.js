@@ -35,7 +35,7 @@ MyGame = ig.Game.extend({
 	// Load a font
     font: new ig.Font('media/font.png'),
     worldCellSize: 24,
-    animating: false,
+    animating: {'karel-blue': false, 'karel-green': false},
     karel: null,
     ival: null,
 
@@ -61,7 +61,7 @@ MyGame = ig.Game.extend({
         if (timerExecuted){
         	GameInfo.maxTimeTimer = new ig.Timer(max_time);
         }
-        this.animating = false;
+        this.animating = {'karel-blue': false, 'karel-green': false};
         if (!GameInfo.finished) {
             GameInfo.beepers = 0;
             this.requireLevel(level_name, null);
@@ -85,8 +85,8 @@ MyGame = ig.Game.extend({
             var karel_id = karel_ids[i];
             var karel = ig.game.getEntityByName(karel_id);
             if(karel) {
-                if(!this.animating && GameInfo.command_buffer[karel_id].length > 0 && !karel.movement.isMoving()) {
-                    this.animating = true;
+                if(!this.animating[karel_id] && GameInfo.command_buffer[karel_id].length > 0 && !karel.movement.isMoving()) {
+                    this.animating[karel_id] = true;
                     var command = GameInfo.command_buffer[karel_id].shift();
                     if(karel.name == karel_id) {
                         console.log('Next command for <' + karel_id + '>: ' + command);
@@ -94,7 +94,7 @@ MyGame = ig.Game.extend({
                     }
                 } else {
                     if(GameInfo.command_buffer[karel_id].length > 0) {
-                        this.animating = false;
+                        this.animating[karel_id] = false;
                     }
                 }
             }

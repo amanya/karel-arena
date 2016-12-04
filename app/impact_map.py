@@ -1,8 +1,6 @@
 import json
 import re
 
-from pykarel.karel.walls import Walls
-
 START = """ig.module( 'game.levels.level0' )
 .requires( 'impact.image','game.entities.beeper','game.entities.tray','game.entities.karel','game.entities.trigger','game.entities.levelchange','game.entities.exit' )
 .defines(function(){
@@ -15,8 +13,10 @@ LevelLevel0Resources=[new ig.Image('media/tileset.png')];
 def to_map(coord):
     return coord / 24
 
+
 def from_map(coord):
     return coord * 24
+
 
 class ImpactMap:
     def __init__(self, logger):
@@ -76,12 +76,28 @@ class ImpactMap:
                 karels.append((entity["settings"]["name"], to_map(entity["y"]), to_map(entity["x"])))
         return karels
 
+    def get_trays(self):
+        trays = []
+        for entity in self.impact_map["entities"]:
+            if entity["type"] == "EntityTray":
+                trays.append(
+                    (
+                        to_map(entity["y"]),
+                        to_map(entity["x"]),
+                        entity["settings"]["capacity"],
+                        entity["settings"]["required"],
+                        entity["settings"]["initialBeepers"],
+                    )
+                )
+        return trays
+
     def to_compiler(self):
         world = {}
         world["dimension"] = self.get_dimension()
         world["walls"] = self.get_walls()
         world["beepers"] = self.get_beepers()
         world["karels"] = self.get_karels()
+        world["trays"] = self.get_trays()
         return world
 
     def from_compiler(self, world):

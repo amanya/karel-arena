@@ -29,11 +29,32 @@
             <input type="text" name="handle" id="handle" value="karel-blue">
             <textarea name="code" id="code" rows="80" cols="20">function main() {
   turnLeft();
-  move();
-  move();
-  move();
-  pickBeeper();
-  move();
+  repeat(10){
+    if(beepersPresent()){
+      pickBeeper();
+    }
+    if(trayPresent()){
+      while(beepersInBag()){
+        putBeeperInTray();
+      }
+    }
+    move();
+  }
+  while(frontIsClear()){
+    move();
+  }
+  turnRight();
+  turnRight();
+  while(noTrayPresent()){
+    move();
+  }
+  while(trayNotEmpty()){
+    pickBeeperFromTray();
+  }
+  repeat(3){
+    move();
+    putBeeper();
+  }
 }</textarea>
           <br/>
           	<div visible="yes" id="button-pack" class="row-fluid">

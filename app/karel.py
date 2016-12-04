@@ -22,6 +22,8 @@ class Karel:
         beepersInBag=1, noBeepersInBag=1,
         trayPresent=1, noTrayPresent=1,
         trayFull=1, trayNotFull=1,
+        trayEmpty=1, trayNotEmpty=1,
+        trayComplete=1, trayNotComplete=1,
         exitPresent=1, noExitPresent=1,
         facingNorth=1, notFacingNorth=1,
         facingEast=1, notFacingEast=1,
@@ -54,10 +56,40 @@ class Karel:
         log("turnRight")
 
     def frontIsClear(self):
-        return self.karel_model.frontIsClear(self.handle)
+        return self.karel_model.front_is_clear(self.handle)
+
+    def frontIsBlocked(self):
+        return not self.karel_model.front_is_clear(self.handle)
 
     def beepersPresent(self):
         return self.karel_model.beepers_present(self.handle)
+
+    def beepersInBag(self):
+        return bool(self.karel_model.get_num_beepers(self.handle))
+
+    def trayPresent(self):
+        return self.karel_model.tray_present(self.handle)
+
+    def noTrayPresent(self):
+        return not self.karel_model.tray_present(self.handle)
+
+    def trayFull(self):
+        return self.karel_model.tray_full(self.handle)
+
+    def trayNotFull(self):
+        return not self.karel_model.tray_full(self.handle)
+
+    def trayEmpty(self):
+        return self.karel_model.tray_empty(self.handle)
+
+    def trayNotEmpty(self):
+        return not self.karel_model.tray_empty(self.handle)
+
+    def trayComplete(self):
+        return self.karel_model.tray_complete(self.handle)
+
+    def trayNotComplete(self):
+        return not self.karel_model.tray_complete(self.handle)
 
     def move(self):
         if self.karel_model.move(self.handle):
@@ -90,6 +122,29 @@ class Karel:
             self.redis.publish(REDIS_CHAN, command)
             log("die")
 
+    def putBeeperInTray(self):
+        if self.karel_model.put_beeper_in_tray(self.handle):
+            command = '{"handle": "%s", "command": "putBeeperInTray"}' % self.handle
+            self.app.logger.info(u'Inserting command: {}'.format(command))
+            self.redis.publish(REDIS_CHAN, command)
+            log("pickBeeper")
+        else:
+            command = '{"handle": "%s", "command": "die"}' % self.handle
+            self.app.logger.info(u'Inserting command: {}'.format(command))
+            self.redis.publish(REDIS_CHAN, command)
+            log("die")
+
+    def pickBeeperFromTray(self):
+        if self.karel_model.pick_beeper_from_tray(self.handle):
+            command = '{"handle": "%s", "command": "pickBeeperFromTray"}' % self.handle
+            self.app.logger.info(u'Inserting command: {}'.format(command))
+            self.redis.publish(REDIS_CHAN, command)
+            log("pickBeeper")
+        else:
+            command = '{"handle": "%s", "command": "die"}' % self.handle
+            self.app.logger.info(u'Inserting command: {}'.format(command))
+            self.redis.publish(REDIS_CHAN, command)
+            log("die")
 
     def load_world(self, world):
         self.karel_model.load_world(world)

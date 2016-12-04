@@ -213,8 +213,15 @@ class KarelModel:
         for exit in world["exits"]:
             self.exits.add_exit(exit[0], exit[1])
 
+        karel_direction = dict((
+            ("EAST", KAREL_EAST),
+            ("WEST", KAREL_WEST),
+            ("NORTH", KAREL_NORTH),
+            ("SOUTH", KAREL_SOUTH),
+        ))
+
         for karel in world["karels"]:
-            self.karels[karel[0]] = KarelEntity(karel[0], karel[1], karel[2], KAREL_EAST)
+            self.karels[karel[0]] = KarelEntity(karel[0], karel[1], karel[2], karel_direction[karel[3]])
 
     def dump_world(self):
         world = {}

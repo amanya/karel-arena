@@ -73,7 +73,7 @@ class ImpactMap:
         karels = []
         for entity in self.impact_map["entities"]:
             if entity["type"] == "EntityKarel":
-                karels.append((entity["settings"]["name"], to_map(entity["y"]), to_map(entity["x"])))
+                karels.append((entity["settings"]["name"], to_map(entity["y"]), to_map(entity["x"]), entity["settings"]["facing"]))
         return karels
 
     def get_trays(self):

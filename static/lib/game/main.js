@@ -89,6 +89,7 @@ MyGame = ig.Game.extend({
                     this.animating = true;
                     var command = GameInfo.command_buffer[karel_id].shift();
                     if(karel.name == karel_id) {
+                        console.log('Next command for <' + karel_id + '>: ' + command);
                         karel.action = command;
                     }
                 } else {

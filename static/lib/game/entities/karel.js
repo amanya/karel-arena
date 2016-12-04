@@ -31,15 +31,37 @@ EntityKarel = ig.Entity.extend({
         this.movement = new GridMovement(this);
         this.movement.speed = {x: 150, y: 150};
         this.rotation = new RotationMovement();
-        this.direction = GridMovement.moveType.RIGHT;
-        this.initial_dir = this.direction
-        //this.movement.direction = GridMovement.moveType.RIGHT;
         this.addAnim('idle', 1, [0]);
         this.addAnim('start', 0.1, [0, -1]);
         this.addAnim('run', 0.05, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
         this.rotation.addAnim(this.anims.idle);
         this.rotation.addAnim(this.anims.run);
+        this.rotation.addAnim(this.anims.start);
         this.justBornTimer = new ig.Timer(1.5);
+        this.fixRotation();
+    },
+
+    fixRotation: function() {
+        switch (this.facing) {
+            case 'EAST':
+                this.direction = GridMovement.moveType.RIGHT;
+                this.rotation.destination = RotationMovement.moveType.EAST;
+                break;;
+            case 'WEST':
+                this.direction = GridMovement.moveType.LEFT;
+                this.rotation.destination = RotationMovement.moveType.WEST;
+                break;;
+            case 'NORTH':
+                this.direction = GridMovement.moveType.UP;
+                this.rotation.destination = RotationMovement.moveType.NORTH;
+                break;;
+            case 'SOUTH':
+                this.direction = GridMovement.moveType.DOWN;
+                this.rotation.destination = RotationMovement.moveType.SOUTH;
+                break;;
+        }
+        this.initial_dir = this.direction;
+        //this.rotation.setCurrentAngle();
     },
 
     kill: function() {
@@ -110,9 +132,7 @@ EntityKarel = ig.Entity.extend({
             this.action = '';
             this.pos.x = this.initial_pos.x;
             this.pos.y = this.initial_pos.y;
-            this.direction = this.initial_dir;
-            this.rotation.destination = RotationMovement.moveType.EAST;
-            this.rotation.setCurrentAngle();
+            this.fixRotation();
         }
         else if (this.action == 'exit') {
             this.action = '';

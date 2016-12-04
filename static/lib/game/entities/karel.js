@@ -133,6 +133,8 @@ EntityKarel = ig.Entity.extend({
             this.pos.x = this.initial_pos.x;
             this.pos.y = this.initial_pos.y;
             this.fixRotation();
+            this.justBorn = true;
+            this.justBornTimer = new ig.Timer(1.5);
         }
         else if (this.action == 'exit') {
             this.action = '';

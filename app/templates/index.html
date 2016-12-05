@@ -27,18 +27,20 @@
     </div>
         <div class="tab-pane active karel-editor" id="editor">
             <input type="text" name="handle" id="handle" value="karel-blue">
-            <textarea name="code" id="code" rows="80" cols="20">function safeMove(){
-  if(frontIsClear()){
+            <textarea name="code" id="code" rows="80" cols="20">function main(){
+  while(noTrayPresent()){
+    if(beepersPresent()){
+      pickBeeper();
+    }
     move();
-  } else {
-    turnLeft();
-    turnLeft();
   }
-}
-function main() {
-  repeat(500){
-    safeMove();
+  repeat(3){
+    putBeeperInTray();
   }
+  while(noExitPresent()){
+    move();
+  }
+  exit();
 }</textarea>
           <br/>
           	<div visible="yes" id="button-pack" class="row-fluid">

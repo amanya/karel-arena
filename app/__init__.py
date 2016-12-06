@@ -5,6 +5,7 @@ from flask_sockets import Sockets
 
 from app.karel import Karel
 from app.karel_backend import KarelBackend
+from app.karel_model import KarelModel
 from config import config
 
 bootstrap = Bootstrap()
@@ -12,6 +13,7 @@ sockets = None
 redis = None
 game = None
 karels = None
+model = None
 
 
 def create_app(config_name):
@@ -27,8 +29,10 @@ def create_app(config_name):
     redis = redis_srv.from_url(app.config['REDIS_URL'])
     global game
     game = KarelBackend(app, redis)
+    global model
+    model = KarelModel(app.logger)
     global karels
-    karels = create_karels(app, game)
+    karels = create_karels(app, game, model)
 
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
         from flask_sslify import SSLify
@@ -43,8 +47,8 @@ def create_app(config_name):
     return app
 
 
-def create_karels(app, game):
-    karels = {k: Karel(app, redis, k) for k in ['karel-blue', 'karel-green', 'karel-red', 'karel-yellow']}
+def create_karels(app, game, model):
+    karels = {k: Karel(app, redis, k, model) for k in ['karel-blue', 'karel-green', 'karel-red', 'karel-yellow']}
     for karel in karels.values():
         karel.load_world(game.impact_map.to_compiler())
     return karels

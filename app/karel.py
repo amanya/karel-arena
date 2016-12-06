@@ -32,8 +32,8 @@ class Karel:
         cornerColorIs=2, random=2
     )
 
-    def __init__(self, app, redis, handle):
-        self.karel_model = KarelModel(app.logger)
+    def __init__(self, app, redis, handle, model):
+        self.karel_model = model
         self.app = app
         self.redis = redis
         self.handle = handle

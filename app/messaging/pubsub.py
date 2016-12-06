@@ -55,7 +55,6 @@ def inbox(ws):
                         redis.publish(current_app.config['REDIS_CHAN'], command)
 
                     karels[handle].respawn(handle)
-                    # Fer respawn dels beepers al mapa del backend
 
                     command = '{"handle": "%s", "command": "die"}' % handle
 

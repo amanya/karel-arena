@@ -89,6 +89,30 @@ class Karel:
     def noExitPresent(self):
         return not self.karel_model.exit_present(self.handle)
 
+    def facingNorth(self):
+        return self.karel_model.facing_north(self.handle)
+
+    def notFacingNorth(self):
+        return not self.karel_model.facing_north(self.handle)
+
+    def facingEast(self):
+        return self.karel_model.facing_east(self.handle)
+
+    def notFacingEast(self):
+        return not self.karel_model.facing_east(self.handle)
+
+    def facingSouth(self):
+        return self.karel_model.facing_south(self.handle)
+
+    def notFacingSouth(self):
+        return not self.karel_model.facing_south(self.handle)
+
+    def facingWest(self):
+        return self.karel_model.facing_west(self.handle)
+
+    def notFacingWest(self):
+        return not self.karel_model.facing_west(self.handle)
+
     def move(self):
         if self.karel_model.move(self.handle):
             self.__send_command("move")

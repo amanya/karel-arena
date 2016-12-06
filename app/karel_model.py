@@ -178,6 +178,18 @@ class KarelModel:
     def exit_present(self, handle):
         return self.exits.exit_present(self.get_karel_row(handle), self.get_karel_col(handle))
 
+    def facing_north(self, handle):
+        return self.karels[handle].dir == KAREL_NORTH
+
+    def facing_east(self, handle):
+        return self.karels[handle].dir == KAREL_EAST
+
+    def facing_south(self, handle):
+        return self.karels[handle].dir == KAREL_SOUTH
+
+    def facing_west(self, handle):
+        return self.karels[handle].dir == KAREL_WEST
+
     def front_is_clear(self, handle):
         log('frontIsClear')
         new_row = self.karels[handle].row

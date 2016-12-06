@@ -9,7 +9,7 @@ ig.module(
 .defines(function() {
 
 EntityKarel = ig.Entity.extend({
-    name: 'karel-blue',
+    name: 'karel-pink',
     initial_pos: {x: 0, y: 0},
     initial_dir: null,
     size: {x: 24, y: 24},
@@ -130,6 +130,7 @@ EntityKarel = ig.Entity.extend({
         }
         else if (this.action == 'die') {
             this.action = '';
+            GameInfo.command_buffer[this.name] = [];
             this.pos.x = this.initial_pos.x;
             this.pos.y = this.initial_pos.y;
             this.fixRotation();

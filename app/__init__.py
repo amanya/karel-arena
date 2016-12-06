@@ -49,6 +49,5 @@ def create_app(config_name):
 
 def create_karels(app, game, model):
     karels = {k: Karel(app, redis, k, model) for k in ['karel-blue', 'karel-green', 'karel-red', 'karel-yellow']}
-    for karel in karels.values():
-        karel.load_world(game.impact_map.to_compiler())
+    model.load_world(game.impact_map.to_compiler())
     return karels

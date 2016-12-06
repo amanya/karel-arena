@@ -4,7 +4,7 @@ import gevent
 from flask import current_app
 from pykarel.karel_compiler import KarelCompiler
 
-from app import game, karels
+from app import game, karels, model
 from app import redis
 from app.karel import DyingException
 from . import messaging
@@ -45,24 +45,17 @@ def inbox(ws):
 
                 if True:
                     while True:
-                        beeper = karels[handle].return_beeper(handle)
+                        beeper = model.return_beeper(handle)
                         if not beeper:
                             break
                         command = '{"handle": "%s", "command": "spawnBeeper", "params": {"x": %d, "y": %d}}' % (
-                                handle, beeper[0] * 24, beeper[1] * 24)
+                            handle, beeper[0] * 24, beeper[1] * 24)
                         current_app.logger.info(command)
-
                         redis.publish(current_app.config['REDIS_CHAN'], command)
 
-                    karels[handle].respawn(handle)
-
+                    model.respawn(handle)
                     command = '{"handle": "%s", "command": "die"}' % handle
-
                     redis.publish(current_app.config['REDIS_CHAN'], command)
-
-                    #game.impact_map.from_compiler(karels[handle].dump_world())
-                    #game.impact_map.reset_karel(handle)
-                    #karels[handle].load_world(game.impact_map.to_compiler())
 
 
 @messaging.route('/receive')

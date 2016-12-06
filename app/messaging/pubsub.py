@@ -46,6 +46,16 @@ def inbox(ws):
 
                     redis.publish(current_app.config['REDIS_CHAN'], command)
 
+                    while True:
+                        beeper = karels[handle].return_beeper(handle)
+                        if not beeper:
+                            break
+                        command = '{"handle": "%s", "command": "spawnBeeper", "params": {"x": %d, "y": %d}}' % (
+                                handle, beeper[0] * 24, beeper[1] * 24)
+                        game.logger.info(u'Inserting command: {}'.format(command))
+
+                        redis.publish(current_app.config['REDIS_CHAN'], command)
+
                     game.impact_map.from_compiler(karels[handle].dump_world())
                     game.impact_map.reset_karel(handle)
                     karels[handle].load_world(game.impact_map.to_compiler())

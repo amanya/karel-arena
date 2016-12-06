@@ -27,6 +27,8 @@ GameInfo = new function() {
     this.command_buffer = {
         'karel-blue': [],
         'karel-green': [],
+        'karel-red': [],
+        'karel-yellow': [],
     };
 },
 
@@ -35,7 +37,7 @@ MyGame = ig.Game.extend({
 	// Load a font
     font: new ig.Font('media/font.png'),
     worldCellSize: 24,
-    animating: {'karel-blue': false, 'karel-green': false},
+    animating: {'karel-blue': false, 'karel-green': false, 'karel-red': false, 'karel-yellow': false},
     karel: null,
     ival: null,
 
@@ -61,7 +63,7 @@ MyGame = ig.Game.extend({
         if (timerExecuted){
         	GameInfo.maxTimeTimer = new ig.Timer(max_time);
         }
-        this.animating = {'karel-blue': false, 'karel-green': false};
+        this.animating = {'karel-blue': false, 'karel-green': false, 'karel-red': false, 'karel-yellow': false};
         if (!GameInfo.finished) {
             GameInfo.beepers = 0;
             this.requireLevel(level_name, null);
@@ -80,17 +82,20 @@ MyGame = ig.Game.extend({
 	update: function() {
         var a = ig.game.getEntityByName('karel-blue');
 
-        karel_ids = ['karel-blue', 'karel-green'];
+        karel_ids = ['karel-blue', 'karel-green', 'karel-red', 'karel-yellow'];
         for(var i = 0; i < karel_ids.length ; i++) {
             var karel_id = karel_ids[i];
             var karel = ig.game.getEntityByName(karel_id);
             if(karel) {
                 if(!this.animating[karel_id] && GameInfo.command_buffer[karel_id].length > 0 && !karel.movement.isMoving()) {
                     this.animating[karel_id] = true;
-                    var command = GameInfo.command_buffer[karel_id].shift();
+                    var msg = GameInfo.command_buffer[karel_id].shift();
                     if(karel.name == karel_id) {
-                        console.log('Next command for <' + karel_id + '>: ' + command);
-                        karel.action = command;
+                        console.log('Next command for <' + karel_id + '>: ' + msg.command);
+                        karel.action = msg.command;
+                        if('params' in msg){
+                            karel.params = msg.params
+                        }
                     }
                 } else {
                     if(GameInfo.command_buffer[karel_id].length > 0) {

@@ -1,5 +1,3 @@
-import json
-
 from pykarel.karel.beepers import Beepers
 from pykarel.karel.exits import Exits
 from pykarel.karel.karel_constants import KAREL_EAST, KAREL_WEST, KAREL_NORTH, KAREL_SOUTH
@@ -21,11 +19,11 @@ class KarelEntity:
         self.row = row
         self.col = col
         self.dir = dir
-        self.bag = 0
+        self.bag = []
 
     def __str__(self):
         return "Karel '{}' at {}, {} facing {} having {} beepers".format(self.handle, self.row, self.col, self.dir,
-                                                                         self.bag)
+                                                                         len(self.bag))
 
 
 class KarelModel:
@@ -99,29 +97,35 @@ class KarelModel:
             error("invalid dir: {}".format(self.dir))
         self.karels[handle].dir = new_d
 
+    def __get_pos(self, handle):
+        return self.karels[handle].row, self.karels[handle].col
+
     def pick_beeper(self, handle):
-        if self.beepers.beeper_present(self.karels[handle].col, self.karels[handle].row):
-            self.beepers.pick_beeper(self.karels[handle].col, self.karels[handle].row)
-            self.karels[handle].bag += 1
+        row, col = self.__get_pos(handle)
+        if self.beepers.beeper_present(row, col):
+            self.beepers.pick_beeper(row, col)
+            self.karels[handle].bag.append((row, col))
         else:
             error("No beepers present")
             return False
         return True
 
     def put_beeper(self, handle):
-        if self.karels[handle].bag > 0:
-            self.beepers.put_beeper(self.karels[handle].col, self.karels[handle].row)
-            self.karels[handle].bag -= 1
+        row, col = self.__get_pos(handle)
+        if len(self.karels[handle].bag) > 0:
+            self.beepers.put_beeper(row, col)
+            self.karels[handle].bag.pop()
             return True
         else:
             error("Not carrying any beeper")
             return False
 
     def put_beeper_in_tray(self, handle):
-        if self.trays.tray_present(self.karels[handle].row, self.karels[handle].col):
-            if self.karels[handle].bag:
-                self.trays.put_beeper(self.karels[handle].row, self.karels[handle].col)
-                self.karels[handle].bag -= 1
+        row, col = self.__get_pos(handle)
+        if self.trays.tray_present(row, col):
+            if len(self.karels[handle].bag) > 0:
+                self.trays.put_beeper(row, col)
+                self.karels[handle].bag.pop()
                 return True
             else:
                 error("Not carrying any beeper")
@@ -131,13 +135,19 @@ class KarelModel:
             return False
 
     def pick_beeper_from_tray(self, handle):
-        if self.trays.tray_present(self.karels[handle].row, self.karels[handle].col):
-            self.trays.pick_beeper(self.karels[handle].row, self.karels[handle].col)
-            self.karels[handle].bag += 1
+        row, col = self.__get_pos(handle)
+        if self.trays.tray_present(row, col):
+            self.trays.pick_beeper(row, col)
+            self.karels[handle].bag.append((0, 0))
             return True
         else:
             error("No trays present")
             return False
+
+    def return_beeper(self, handle):
+        if len(self.karels[handle].bag) > 0:
+            return self.karels[handle].bag.pop()
+        return None
 
     def get_direction(self, handle):
         return self.karels[handle].dir
@@ -155,7 +165,7 @@ class KarelModel:
         return self.karels[handle].col
 
     def get_num_beepers(self, handle):
-        return self.karels[handle].bag
+        return len(self.karels[handle].bag)
 
     def has_wall(self, row, col):
         return self.walls.get_wall(row, col)

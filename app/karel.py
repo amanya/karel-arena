@@ -151,6 +151,9 @@ class Karel:
     def dump_world(self):
         return self.karel_model.dump_world()
 
+    def return_beeper(self, handle):
+        return self.karel_model.return_beeper(handle)
+
 
 INFINITY = 100000000
 INCREMENT = -1

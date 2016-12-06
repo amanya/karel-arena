@@ -171,7 +171,12 @@ EntityKarel = ig.Entity.extend({
                 GameInfo.beepers--;
                 ig.game.spawnEntity('EntityBeeper', this.pos.x, this.pos.y);
             }
-
+        }
+        else if (this.action == 'spawnBeeper') {
+            this.action = '';
+            GameInfo.beepers--;
+            ig.game.spawnEntity('EntityBeeper', this.params.x, this.params.y);
+            this.params = '';
         }
         else if (this.action == 'putBeeperInTray') {
             this.action = '';

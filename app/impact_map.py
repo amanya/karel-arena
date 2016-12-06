@@ -21,8 +21,8 @@ def from_map(coord):
 class ImpactMap:
     def __init__(self, logger):
         self.logger = logger
-        with open('levels/level1.js') as f:
-            self.impact_map = json.loads(re.search('\/\*JSON\[\*\/(.+?)\/\*\]JSON\*\/', f.read()).group(1))
+        with open('levels/level.json') as f:
+            self.impact_map = json.loads(f.read())
         self.karel_initial_positions = self.get_initial_positions()
 
     def __str__(self):

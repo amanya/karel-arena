@@ -22,12 +22,14 @@ $(document).ready(function() {
                 $("#error").fadeOut("slow");
             }, 10000);
         } else {
-            GameInfo.command_buffer[data.handle].push(data.command);
+            GameInfo.command_buffer[data.handle].push(data);
         }
     };
 
     editor = CodeMirror.fromTextArea(document.getElementById('code'), {
         lineNumbers: true,
+        tabSize: 4,
+        indentUnit: 4,
         mode: "javascript"
     });
     //var original_code = editor.getValue();

@@ -1,3 +1,5 @@
+import copy
+
 from pykarel.karel.beepers import Beepers
 from pykarel.karel.exits import Exits
 from pykarel.karel.karel_constants import KAREL_EAST, KAREL_WEST, KAREL_NORTH, KAREL_SOUTH
@@ -27,12 +29,14 @@ class KarelEntity:
 
 
 class KarelModel:
-    def __init__(self):
+    def __init__(self, logger):
+        self.logger = logger
         self.beepers = None
         self.trays = None
         self.exits = None
         self.walls = None
         self.karels = {}
+        self.karels_initial = {}
         self.rows = 0
         self.cols = 0
 
@@ -44,6 +48,7 @@ class KarelModel:
     def move(self, handle):
         new_row = self.karels[handle].row
         new_col = self.karels[handle].col
+        dir = self.karels[handle].dir
         if self.karels[handle].dir == KAREL_EAST:
             new_col += 1
         elif self.karels[handle].dir == KAREL_WEST:
@@ -55,9 +60,9 @@ class KarelModel:
         if self.walls.is_move_valid(self.karels[handle].row, self.karels[handle].col, new_row, new_col):
             self.karels[handle].row = new_row
             self.karels[handle].col = new_col
-            log("row: {} col: {}".format(new_row, new_col))
             return True
         else:
+            self.logger.info("row: {} col: {} dir: {}".format(new_row, new_col, dir))
             error("Front is blocked")
         return False
 
@@ -146,7 +151,9 @@ class KarelModel:
 
     def return_beeper(self, handle):
         if len(self.karels[handle].bag) > 0:
-            return self.karels[handle].bag.pop()
+            beeper_pos = self.karels[handle].bag.pop()
+            self.beepers.put_beeper(*beeper_pos)
+            return beeper_pos
         return None
 
     def get_direction(self, handle):
@@ -247,6 +254,7 @@ class KarelModel:
 
         for karel in world["karels"]:
             self.karels[karel[0]] = KarelEntity(karel[0], karel[1], karel[2], karel_direction[karel[3]])
+            self.karels_initial[karel[0]] = KarelEntity(karel[0], karel[1], karel[2], karel_direction[karel[3]])
 
     def dump_world(self):
         world = {}
@@ -258,3 +266,6 @@ class KarelModel:
             log("karel: {}".format(karel))
             world["karels"].append([karel.handle, karel.row, karel.col, karel.dir])
         return world
+
+    def respawn(self, handle):
+        self.karels[handle] = copy.copy(self.karels_initial[handle])

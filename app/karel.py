@@ -2,6 +2,10 @@ from app.karel_backend import REDIS_CHAN
 from karel_model import KarelModel
 
 
+class DyingException(Exception):
+    pass
+
+
 class Karel:
     instructions = dict(
         move=1, turnLeft=1, putBeeper=1, pickBeeper=1,
@@ -29,14 +33,13 @@ class Karel:
     )
 
     def __init__(self, app, redis, handle):
-        self.karel_model = KarelModel()
+        self.karel_model = KarelModel(app.logger)
         self.app = app
         self.redis = redis
         self.handle = handle
 
     def __send_command(self, command):
         msg = '{"handle": "%s", "command": "%s"}' % (self.handle, command)
-        self.app.logger.info(u'Inserting command: {}'.format(msg))
         self.redis.publish(REDIS_CHAN, msg)
 
     def turnLeft(self):
@@ -116,10 +119,15 @@ class Karel:
     def move(self):
         if self.karel_model.move(self.handle):
             self.__send_command("move")
+        else:
+            self.__send_command("die")
+            raise DyingException, "Front is blocked"
 
     def exit(self):
         if self.karel_model.exit(self.handle):
             self.__send_command("exit")
+        else:
+            self.__send_command("die")
 
     def pickBeeper(self):
         if self.karel_model.pick_beeper(self.handle):
@@ -154,7 +162,9 @@ class Karel:
     def return_beeper(self, handle):
         return self.karel_model.return_beeper(handle)
 
+    def respawn(self, handle):
+        self.karel_model.respawn(handle)
+
 
 INFINITY = 100000000
-INCREMENT = -1
-DECREMENT = -2
+

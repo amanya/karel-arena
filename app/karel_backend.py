@@ -17,7 +17,6 @@ class KarelBackend(object):
         for message in self.pubsub.listen():
             data = message.get('data')
             if message['type'] == 'message':
-                self.logger.info(u'Sending message: {}'.format(data))
                 yield data
 
     def register(self, client):

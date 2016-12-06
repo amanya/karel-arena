@@ -58,7 +58,7 @@ class ImpactMap:
         for entity in self.impact_map["entities"]:
             if entity["type"] == "EntityKarel":
                 handle = entity["settings"]["name"]
-                karels[handle] = [entity["y"], entity["x"]]
+                karels[handle] = [entity["y"], entity["x"], entity["settings"]["facing"]]
         return karels
 
     def reset_karel(self, handle):
@@ -68,6 +68,7 @@ class ImpactMap:
                 if entity_name == handle:
                     entity["y"] = self.karel_initial_positions[handle][0]
                     entity["x"] = self.karel_initial_positions[handle][1]
+                    entity["settings"]["facing"] = self.karel_initial_positions[handle][2]
 
     def get_karels(self):
         karels = []

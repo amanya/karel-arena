@@ -1,11 +1,13 @@
 from flask import render_template, send_from_directory
 
-from app import game
+from app import game, karels
 from . import main
 
 
 @main.route('/')
 def hello():
+    for karel in karels.values():
+        karel.load_world(game.impact_map.to_compiler())
     return render_template('index.html')
 
 

@@ -6,6 +6,7 @@ from pykarel.karel_compiler import KarelCompiler
 
 from app import game, karels
 from app import redis
+from app.karel import DyingException
 from . import messaging
 
 running = False
@@ -28,7 +29,6 @@ def inbox(ws):
 
             handle = message["handle"]
 
-            game.logger.info(u'Message: {}'.format(repr(message["text"])))
             compiler = KarelCompiler(karels[handle])
 
             try:
@@ -37,28 +37,33 @@ def inbox(ws):
                 msg = json.dumps({"error": "%s" % e})
                 redis.publish(current_app.config['REDIS_CHAN'], msg)
             else:
-                while not compiler.execute_step():
+                try:
+                    while not compiler.execute_step():
+                        pass
+                except DyingException:
                     pass
 
                 if True:
-                    command = '{"handle": "%s", "command": "die"}' % handle
-                    game.logger.info(u'Inserting command: {}'.format(command))
-
-                    redis.publish(current_app.config['REDIS_CHAN'], command)
-
                     while True:
                         beeper = karels[handle].return_beeper(handle)
                         if not beeper:
                             break
                         command = '{"handle": "%s", "command": "spawnBeeper", "params": {"x": %d, "y": %d}}' % (
                                 handle, beeper[0] * 24, beeper[1] * 24)
-                        game.logger.info(u'Inserting command: {}'.format(command))
+                        current_app.logger.info(command)
 
                         redis.publish(current_app.config['REDIS_CHAN'], command)
 
-                    game.impact_map.from_compiler(karels[handle].dump_world())
-                    game.impact_map.reset_karel(handle)
-                    karels[handle].load_world(game.impact_map.to_compiler())
+                    karels[handle].respawn(handle)
+                    # Fer respawn dels beepers al mapa del backend
+
+                    command = '{"handle": "%s", "command": "die"}' % handle
+
+                    redis.publish(current_app.config['REDIS_CHAN'], command)
+
+                    #game.impact_map.from_compiler(karels[handle].dump_world())
+                    #game.impact_map.reset_karel(handle)
+                    #karels[handle].load_world(game.impact_map.to_compiler())
 
 
 @messaging.route('/receive')

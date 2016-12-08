@@ -1,4 +1,5 @@
 import json
+from functools import partial
 
 import gevent
 from flask import current_app
@@ -43,11 +44,8 @@ def inbox(ws):
                 except DyingException:
                     pass
 
-                if True:
-                    while True:
-                        beeper = model.return_beeper(handle)
-                        if not beeper:
-                            break
+                if True: # TODO: This code should be executed when the player didn't wins
+                    for beeper in iter(partial(model.return_beeper, handle), None):
                         command = '{"handle": "%s", "command": "spawnBeeper", "params": {"x": %d, "y": %d}}' % (
                             handle, beeper[0] * 24, beeper[1] * 24)
                         current_app.logger.info(command)

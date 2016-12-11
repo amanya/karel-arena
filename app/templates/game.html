@@ -1,0 +1,109 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}karel-arena{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">karel-arena</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Bootstrap starter template</h1>
+        <p>Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+    </div>
+
+    <div class="btn-group btn-group-lg" role="group">
+        <button type="button" class="btn btn-info">Blue</button>
+        <button type="button" class="btn btn-success">Green</button>
+        <button type="button" class="btn btn-danger">Red</button>
+        <button type="button" class="btn btn-warning">Yellow</button>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div id="ref_canvas_container">
+                <canvas id='canvas'></canvas>
+            </div>
+        </div>
+        <div class="col-md-6" id="editor">
+            <input type="text" name="handle" id="handle" value="karel-blue">
+            <textarea name="code" id="code" rows="80" cols="20"></textarea>
+            <br/>
+            <div visible="yes" id="button-pack" class="row-fluid">
+                <div>
+                    <input class="btn btn-success" type="button" id="execute_btn" value="Executa"/>
+                    <input class="btn" type="button" id="clean" value="Neteja l'editor"/>
+                </div>
+            </div>
+            <br/>
+            <div class="alert alert-error" style="cursor: pointer ;display:none" id="error">
+                <button type="button" class="close" data-dismiss="alert" id="btn_dismiss">
+                    <i class="icon-remove" id="remove"></i>
+                </button>
+                <strong>
+                    <i class="icon-remove" id="error_msg"></i>
+                </strong>
+                <i class="icon-question-sign"></i>
+                </button>
+            </div>
+            <div class="alert alert-block alert-success" style="display:none" id="expl_error">
+                <strong>
+                    <i class="icon-ok" id="expl_text"></i>
+                </strong>
+                <button class="btn btn-small btn-success" onclick="expl_close();">D'acord</button>
+            </div>
+            <br/>
+        </div>
+    </div>
+</div><!-- /.container -->
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+  var level_name = 'level0';
+  var game_id = '{{ game_id }}';
+  var max_instr = 10;
+  var max_time = 100;
+  var num_beepers = 100;
+  if (isNaN(max_instr)) {
+    max_instr = 0;
+  }
+  if (isNaN(max_time)) {
+    max_time = 0;
+  }
+  if (isNaN(num_beepers)) {
+    num_beepers = 0;
+  }
+
+</script>
+<script src="/static/assets/js/jwerty/jwerty.js"></script>
+<script src="/static/assets/js/bootbox.min.js"></script>
+<script src="/static/media/js/codemirror.js"></script>
+<script src="/static/media/js/javascript/javascript.js"></script>
+<script src="/static/media/js/starterCode.js"></script>
+<script src="/static/assets/js/reconnecting-websocket.min.js"></script>
+<script src="/lib/impact/impact.js"></script>
+<script src="/lib/game/main.js"></script>
+<script src="/static/media/js/app.js"></script>
+<script src="/static/assets/js/keyboard_common.js"></script>
+{{super()}}
+{% endblock %}

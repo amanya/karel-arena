@@ -2,6 +2,7 @@ import redis as redis_srv
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sockets import Sockets
+from werkzeug.routing import BaseConverter
 
 from app.karel import Karel
 from app.karel_backend import KarelBackend
@@ -14,6 +15,12 @@ redis = None
 game = None
 karels = None
 model = None
+
+
+class RegexConverter(BaseConverter):
+    def __init__(self, url_map, *items):
+        super(RegexConverter, self).__init__(url_map)
+        self.regex = items[0]
 
 
 def create_app(config_name):
@@ -37,6 +44,8 @@ def create_app(config_name):
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
         from flask_sslify import SSLify
         sslify = SSLify(app)
+
+    app.url_map.converters['regex'] = RegexConverter
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

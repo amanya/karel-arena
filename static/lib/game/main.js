@@ -128,7 +128,7 @@ MyGame = ig.Game.extend({
         } else {
             var _this = this;
 
-            $.getScript('/map', function() {
+            $.getScript('/' + game_id + '/map', function() {
 
                 _this.loadLevel(ig.global[levelObjectName]);
 

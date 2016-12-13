@@ -50,8 +50,11 @@ def create_app(config_name):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .messaging import messaging as messaging_blueprint
-    sockets.register_blueprint(messaging_blueprint)
+    from .setup import setup as setup_blueprint
+    sockets.register_blueprint(setup_blueprint)
+
+    #from .messaging import messaging as messaging_blueprint
+    #sockets.register_blueprint(messaging_blueprint)
 
     return app
 

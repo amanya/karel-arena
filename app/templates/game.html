@@ -1,5 +1,4 @@
-{% extends "bootstrap/base.html" %}
-{% block title %}karel-arena{% endblock %}
+{% extends "base.html" %}
 
 {% block styles %}
 {{super()}}
@@ -8,29 +7,6 @@
 <link rel="stylesheet"
       href="{{url_for('static', filename='media/css/codemirror.css')}}">
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-{% endblock %}
-
-{% block navbar %}
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">karel-arena</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
 {% endblock %}
 
 {% block content %}
@@ -48,27 +24,6 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Pick your karel</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="btn-group btn-group-justified btn-group-lg" data-toggle="buttons">
-                        <label class="btn btn-info active">
-                          <input type="radio" name="handle" id="karel-blue" autocomplete="off" checked>Blue
-                        </label>
-                        <label class="btn btn-success active">
-                            <input type="radio" name="handle" id="karel-green" autocomplete="off">Green
-                        </label>
-                        <label class="btn btn-danger active">
-                            <input type="radio" name="handle" id="karel-red" autocomplete="off">Red
-                        </label>
-                        <label class="btn btn-warning active">
-                            <input type="radio" name="handle" id="karel-yellow" autocomplete="off">Yellow
-                        </label>
-                    </div>
-                </div>
-            </div>
             <form>
                 <div class="form-group">
                     <textarea class="form-control" name="code" id="code" rows="80" cols="20">function main() {
@@ -110,6 +65,8 @@
 <script type="text/javascript">
   var level_name = 'level0';
   var game_id = '{{ game_id }}';
+  var handle = '{{ handle }}';
+  var nickname = '{{ nickname }}';
   var max_instr = 10;
   var max_time = 100;
   var num_beepers = 100;

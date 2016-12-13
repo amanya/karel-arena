@@ -3,11 +3,6 @@ var editor = null;
 
 $(document).ready(function() {
 
-    var karel_selector = $('input[name=handle]');
-    karel_selector.change(function(){
-
-    });
-
     // Support TLS-specific URLs, when appropriate.
     if (window.location.protocol == "https:") {
       var ws_scheme = "wss://";
@@ -41,13 +36,12 @@ $(document).ready(function() {
     var play_btn = document.getElementById('execute_btn');
     play_btn.onclick = function() {
         try {
-          var handle = $('input[name=handle]:checked').attr('id')
           var text = editor.getValue();
           outbox.send(JSON.stringify({ handle: handle, text: text }));
         }
         catch(e) {
           $("#error").fadeIn("slow");
-          $("#error_msg").html("<strong>" + e.message + "</strong>");
+          $("#error_msg").html("<strong>" + e + "</strong>");
             setTimeout(function(){
               $("#error").fadeOut("slow");
             }, 10000);

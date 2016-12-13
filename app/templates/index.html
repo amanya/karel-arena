@@ -7,9 +7,20 @@
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 {% endblock %}
 
+
+
+
 {% block content %}
 <div class="container">
     <div class="app">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>{{ messages[0] }}</strong>
+                </div>
+            {% endif %}
+        {% endwith %}
         <h1>Karel the robot multiplayer</h1>
         <p class="lead">Create a game and invite up to 4 friends</p>
 

@@ -1,20 +1,15 @@
 import redis as redis_srv
 from flask import Flask
 from flask_bootstrap import Bootstrap
-from flask_sockets import Sockets
+from flask_socketio import SocketIO
 from werkzeug.routing import BaseConverter
 
-from app.karel import Karel
-from app.karel_backend import KarelBackend
-from app.karel_model import KarelModel
+from app.game import GameNamespace
+from app.setup import SetupNamespace
 from config import config
 
 bootstrap = Bootstrap()
-sockets = None
 redis = None
-game = None
-karels = None
-model = None
 
 
 class RegexConverter(BaseConverter):
@@ -30,16 +25,10 @@ def create_app(config_name):
 
     bootstrap.init_app(app)
 
-    global sockets
-    sockets = Sockets(app)
+    socketio = SocketIO(app)
+
     global redis
     redis = redis_srv.from_url(app.config['REDIS_URL'])
-    global game
-    game = KarelBackend(app, redis)
-    global model
-    model = KarelModel(app.logger)
-    global karels
-    karels = create_karels(app, game, model)
 
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:
         from flask_sslify import SSLify
@@ -50,16 +39,7 @@ def create_app(config_name):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .setup import setup as setup_blueprint
-    sockets.register_blueprint(setup_blueprint)
+    socketio.on_namespace(SetupNamespace(redis, '/setup'))
+    socketio.on_namespace(GameNamespace(redis, '/game'))
 
-    #from .messaging import messaging as messaging_blueprint
-    #sockets.register_blueprint(messaging_blueprint)
-
-    return app
-
-
-def create_karels(app, game, model):
-    karels = {k: Karel(app, redis, k, model) for k in ['karel-blue', 'karel-green', 'karel-red', 'karel-yellow']}
-    model.load_world(game.impact_map.to_compiler())
-    return karels
+    return app, socketio

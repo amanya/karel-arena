@@ -1,30 +1,45 @@
 import json
 
+from flask import current_app
+from flask import flash
 from flask import render_template, send_from_directory
 from flask import session
+from flask import url_for
 from werkzeug.utils import redirect
 
-from app import game, model, redis
+from app import game, redis
+from app.impact_map import ImpactMap
 from app.main.forms import GameForm
 from . import main
 
 
 @main.route("/<regex('([A-Za-z0-9]{4})'):game_id>", methods=["GET", "POST"])
 def run_game(game_id):
+    key = "{}|*".format(game_id)
+    keys = redis.keys(key)
+    if len(keys) >= 4:
+        flash("This game is full, start a new one", "errors")
+        return redirect(url_for('main.index'))
     form = GameForm()
     if form.validate_on_submit():
         session['nickname'] = form.data["nickname"]
         session['handle'] = form.data["handle"]
+        if not redis.exists(form.data["game_id"]):
+            impact_map = ImpactMap(current_app.logger)
+            map = impact_map.to_compiler()
+            redis.set(form.data["game_id"], json.dumps(map))
         return redirect("/{}".format(game_id))
 
-    if redis.exists(game_id):
-        map = json.loads(redis.get(game_id))
-        model.load_world(map)
+    if 'nickname' in session and len(keys) > 0:
         return render_template('game.html', game_id=game_id, nickname=session["nickname"], handle=session["handle"])
     else:
-        map = game.impact_map.to_compiler()
-        redis.set(game_id, json.dumps(map))
         return render_template('setup.html', game_id=game_id, form=form)
+
+
+@main.route("/<regex('([A-Za-z0-9]{5,})'):game_id>")
+def bad_game_name(game_id):
+    flash("The game name must have exactly 4 characters", "errors")
+    return redirect(url_for('main.index'))
 
 
 @main.route("/<regex('([A-Za-z0-9]{4})'):game_id>/reset")
@@ -35,7 +50,8 @@ def reset_game(game_id):
 
 @main.route("/<regex('([A-Za-z0-9]{4})'):game_id>/map")
 def send_map(game_id):
-    return str(game.impact_map)
+    impact_map = ImpactMap(current_app.logger)
+    return str(impact_map)
 
 
 @main.route('/')

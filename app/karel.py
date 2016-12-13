@@ -1,5 +1,4 @@
-from app.karel_backend import REDIS_CHAN
-from karel_model import KarelModel
+from flask_socketio import emit
 
 
 class DyingException(Exception):
@@ -32,15 +31,15 @@ class Karel:
         cornerColorIs=2, random=2
     )
 
-    def __init__(self, app, redis, handle, model):
+    def __init__(self, model, game_id, nickname, handle):
         self.karel_model = model
-        self.app = app
-        self.redis = redis
+        self.game_id = game_id
+        self.nickname = nickname
         self.handle = handle
 
     def __send_command(self, command):
         msg = '{"handle": "%s", "command": "%s"}' % (self.handle, command)
-        self.redis.publish(REDIS_CHAN, msg)
+        emit('command', msg, room=self.game_id)
 
     def turnLeft(self):
         self.karel_model.turn_left(self.handle)

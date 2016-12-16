@@ -56,6 +56,7 @@ def send_map(game_id):
 
 @main.route('/')
 def index():
+    session.clear()
     return render_template('index.html')
 
 

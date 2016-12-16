@@ -17,6 +17,7 @@ $(document).ready(function() {
         $("#handle-form input[name=handle]").val(handle);
     });
     $("input[name=handle_radio]").change(function(e){
+        $("#handle-form input[type=submit]").removeClass("disabled");
         var handle = $("input[name=handle_radio]:checked").attr("id");
         socket.emit('pick_karel', {game_id: game_id, nickname: nickname, handle: handle});
     });

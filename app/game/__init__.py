@@ -33,7 +33,7 @@ class GameNamespace(Namespace):
 
         try:
             compiler.compile(str(data["code"]))
-        except Exception, e:
+        except Exception as e:
             emit("error", str(e), room=data["game_id"])
         else:
             try:

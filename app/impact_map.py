@@ -11,7 +11,7 @@ LevelLevel0Resources=[new ig.Image('media/tileset.png')];
 
 
 def to_map(coord):
-    return coord / 24
+    return int(coord / 24)
 
 
 def from_map(coord):

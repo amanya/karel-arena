@@ -120,7 +120,7 @@ class Karel:
             self.__send_command("move")
         else:
             self.__send_command("die")
-            raise DyingException, "Front is blocked"
+            raise DyingException("Front is blocked")
 
     def exit(self):
         if self.karel_model.exit(self.handle):

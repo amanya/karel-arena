@@ -50,7 +50,7 @@ class ImpactMap:
         beepers = []
         for entity in self.impact_map["entities"]:
             if entity["type"] == "EntityBeeper":
-                beepers.append((to_map(entity["x"]), to_map(entity["y"])))
+                beepers.append((to_map(entity["y"]), to_map(entity["x"])))
         return beepers
 
     def get_initial_positions(self):

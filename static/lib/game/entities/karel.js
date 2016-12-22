@@ -124,6 +124,8 @@ EntityKarel = ig.Entity.extend({
             }
         }
         else if (this.action == 'move') {
+            var position = this.name + " -> " + " x: " + this.pos.x + " y: " + this.pos.y;
+            $("#" + this.name + "-pos").text(position);
             this.movement.direction = this.direction;
             this.currentAnim = this.anims.run.rewind();
             this.action = '';
@@ -176,7 +178,7 @@ EntityKarel = ig.Entity.extend({
         else if (this.action == 'spawnBeeper') {
             this.action = '';
             GameInfo.beepers--;
-            ig.game.spawnEntity('EntityBeeper', this.params.x, this.params.y);
+            ig.game.spawnEntity('EntityBeeper', this.params.y, this.params.x);
             this.params = '';
         }
         else if (this.action == 'putBeeperInTray') {
@@ -219,6 +221,8 @@ EntityKarel = ig.Entity.extend({
         else if (!this.movement.isMoving()) {
             this.currentAnim = this.anims.idle;
         }
+        var msg = this.name + " -> " + " bag: " + GameInfo.beepers;
+        $("#" + this.name + "-bag").text(msg);
     },
 
     check: function(other) {

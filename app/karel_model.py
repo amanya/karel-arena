@@ -178,7 +178,7 @@ class KarelModel:
         return self.walls.get_wall(row, col)
 
     def beepers_present(self, handle):
-        return self.beepers.beeper_present(self.get_karel_col(handle), self.get_karel_row(handle))
+        return self.beepers.beeper_present(self.get_karel_row(handle), self.get_karel_col(handle))
 
     def tray_present(self, handle):
         return self.trays.tray_present(self.get_karel_row(handle), self.get_karel_col(handle))

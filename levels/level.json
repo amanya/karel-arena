@@ -2,6 +2,11 @@
     "entities": [
         {
             "type": "EntityBeeper",
+            "x": 72,
+            "y": 384
+        },
+        {
+            "type": "EntityBeeper",
             "x": 240,
             "y": 240
         },

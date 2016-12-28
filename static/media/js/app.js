@@ -16,6 +16,14 @@ $(document).ready(function() {
     base_url = base_url.replace(/\/.*$/, "/");
     base_url_to_show = base_url_to_show.replace(/\/.*$/, "/");
     $("#game-url").text(base_url_to_show);
+    $("#game-id").keyup(function(e){
+        var text = $("#game-id").val();
+        if(text.length == 4){
+            $("#start-form input[type=submit]").prop('disabled', false);
+        } else {
+            $("#start-form input[type=submit]").prop('disabled', true);
+        }
+    });
     $("#start-form input[type=submit]").click(function(e){
         e.preventDefault();
         var game_id = $("#game-id").val();

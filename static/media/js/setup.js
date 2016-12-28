@@ -1,6 +1,17 @@
 $(document).ready(function() {
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/setup');
     var nickname = null;
+    $("#handle-form input[type=submit]").prop('disabled', true);
+    $("#nickname-form input[type=submit]").prop('disabled', true);
+    $("#nickname").focus();
+    $("#nickname").keyup(function(e){
+        var text = $("#nickname").val();
+        if(text.length > 0){
+            $("#nickname-form input[type=submit]").prop('disabled', false);
+        } else {
+            $("#nickname-form input[type=submit]").prop('disabled', true);
+        }
+    });
     $("#nickname-form input[type=submit]").click(function(e){
         e.preventDefault();
         nickname = $("#nickname").val();
@@ -17,7 +28,7 @@ $(document).ready(function() {
         $("#handle-form input[name=handle]").val(handle);
     });
     $("input[name=handle_radio]").change(function(e){
-        $("#handle-form input[type=submit]").removeClass("disabled");
+        $("#handle-form input[type=submit]").prop('disabled', false);
         var handle = $("input[name=handle_radio]:checked").attr("id");
         socket.emit('pick_karel', {game_id: game_id, nickname: nickname, handle: handle});
     });

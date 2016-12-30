@@ -144,7 +144,7 @@ EntityKarel = ig.Entity.extend({
             var exits = ig.game.getEntitiesByType('EntityExit');
             for (var n = 0; n < exits.length; n++) {
                 var distance = this.distanceTo(exits[n]);
-                if (distance < 15) {
+                if (distance < 30) {
                     var trays = ig.game.getEntitiesByType('EntityTray');
                     for (var n = 0; n < trays.length; n++) {
                         if (trays[n].required != -1 && trays[n].beepers < trays[n].required) {

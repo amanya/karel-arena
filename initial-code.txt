@@ -1,0 +1,40 @@
+function main() {
+  repeat(7){
+    pickMove();
+    turnLeft();
+    pickMove();
+    turnRight();
+  }
+  pickMove();
+  turnLeft();
+  pickMove();
+  turnLeft();
+  pickMove();
+  turnLeft();
+  pickMove();
+  vesACasa();
+  
+}
+function vesACasa(){
+  while(frontIsClear()){
+    move();
+  }
+  turnRight();
+  while(noTrayPresent()){
+    move();
+  }
+  while(beepersInBag()){
+    putBeeperInTray();
+  }
+  turnRight();
+  while(noExitPresent()){
+    move();
+  }
+  exit();
+}
+function pickMove() {
+  if(beepersPresent()) {
+    pickBeeper();
+  }
+  move();
+}

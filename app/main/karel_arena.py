@@ -1,4 +1,5 @@
 import json
+import os
 
 from flask import current_app
 from flask import flash
@@ -31,7 +32,18 @@ def run_game(game_id):
         return redirect("/{}".format(game_id))
 
     if 'nickname' in session and len(keys) > 0:
-        return render_template('game.html', game_id=game_id, nickname=session["nickname"], handle=session["handle"])
+        try:
+            with open("initial-code.txt") as f:
+                initial_code = f.read()
+        except IOError:
+            initial_code = "function main() {" + os.linesep + "}"
+        return render_template(
+            'game.html',
+            game_id=game_id,
+            nickname=session["nickname"],
+            handle=session["handle"],
+            initial_code=initial_code
+        )
     else:
         return render_template('setup.html', game_id=game_id, form=form)
 

@@ -26,20 +26,7 @@
         <div class="col-md-6">
             <form>
                 <div class="form-group">
-                    <textarea class="form-control" name="code" id="code" rows="80" cols="20">function main() {
-  repeat(10){
-    pickMove();
-    turnLeft();
-    pickMove();
-    turnRight();
-  }
-}
-function pickMove() {
-  if(beepersPresent()) {
-    pickBeeper();
-  }
-  move();
-}</textarea>
+                    <textarea class="form-control" name="code" id="code" rows="80" cols="20">{{ initial_code }}</textarea>
                 </div>
                 <div class="form-group">
                     <div class="btn-group" role="group">

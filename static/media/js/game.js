@@ -19,8 +19,8 @@ $(document).ready(function() {
 
     editor = CodeMirror.fromTextArea(document.getElementById('code'), {
         lineNumbers: true,
-        tabSize: 4,
-        indentUnit: 4,
+        tabSize: 2,
+        indentUnit: 2,
         mode: "javascript"
     });
     var original_code = "function main(){\n\n}";

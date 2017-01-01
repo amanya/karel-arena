@@ -21,7 +21,12 @@ GameInfo = new function() {
     this.maxTimeTimer = null;
     this.requiredBeepers = num_beepers;
     this.traysFullAchieved = true;
-    this.beepers = 0;
+    this.beepers = {
+        'karel-blue': 0,
+        'karel-green': 0,
+        'karel-red': 0,
+        'karel-yellow': 0,
+    };
     this.finished = false;
     this.timeOut = false;
     this.command_buffer = {
@@ -65,7 +70,7 @@ MyGame = ig.Game.extend({
         }
         this.animating = {'karel-blue': false, 'karel-green': false, 'karel-red': false, 'karel-yellow': false};
         if (!GameInfo.finished) {
-            GameInfo.beepers = 0;
+            GameInfo.beepers[this.name] = 0;
             this.requireLevel(level_name, null);
         }
 	},
@@ -113,7 +118,7 @@ MyGame = ig.Game.extend({
 		this.parent();
 		if (GameInfo.maxTimeTimer){
         var max_time = Math.round(Math.abs(GameInfo.maxTimeTimer.delta()));
-        var num_beepers = GameInfo.beepers;
+        var num_beepers = GameInfo.beepers[this.name];
         this.font.draw("t:" + max_time + " b:" + num_beepers, 10, 10, ig.Font.ALIGN_RIGHT);
 		}
 	},
@@ -147,7 +152,7 @@ LevelEnd = ig.Game.extend({
         if (GameInfo.timeOut == true) {
             return false;
         }
-        var reqBeepersAchieved = GameInfo.beepers >= GameInfo.requiredBeepers;
+        var reqBeepersAchieved = GameInfo.beepers[this.name] >= GameInfo.requiredBeepers;
         return reqBeepersAchieved && GameInfo.traysFullAchieved
     },
 

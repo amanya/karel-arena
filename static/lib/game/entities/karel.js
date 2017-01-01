@@ -162,7 +162,7 @@ EntityKarel = ig.Entity.extend({
             for (var n = 0; n < beepers.length; n++) {
                 var distance = this.distanceTo(beepers[n]);
                 if (distance < 15) {
-                    GameInfo.beepers++;
+                    GameInfo.beepers[this.name]++;
                     beepers[n].kill();
                     break;
                 }
@@ -170,14 +170,14 @@ EntityKarel = ig.Entity.extend({
         }
         else if (this.action == 'putBeeper') {
             this.action = '';
-            if (GameInfo.beepers > 0) {
-                GameInfo.beepers--;
+            if (GameInfo.beepers[this.name] > 0) {
+                GameInfo.beepers[this.name]--;
                 ig.game.spawnEntity('EntityBeeper', this.pos.x, this.pos.y);
             }
         }
         else if (this.action == 'spawnBeeper') {
             this.action = '';
-            GameInfo.beepers--;
+            GameInfo.beepers[this.name]--;
             ig.game.spawnEntity('EntityBeeper', this.params.y, this.params.x);
             this.params = '';
         }
@@ -189,8 +189,8 @@ EntityKarel = ig.Entity.extend({
                 if (distance < 15) {
                     if (trays[n].capacity == -1 ||
                         trays[n].beepers < trays[n].capacity) {
-                        if (GameInfo.beepers > 0) {
-                            GameInfo.beepers--;
+                        if (GameInfo.beepers[this.name] > 0) {
+                            GameInfo.beepers[this.name]--;
                             trays[n].beepers++;
                         }
                     }
@@ -205,7 +205,7 @@ EntityKarel = ig.Entity.extend({
                 var distance = this.distanceTo(trays[n]);
                 if (distance < 15) {
                     if (trays[n].beepers > 0) {
-                        GameInfo.beepers++;
+                        GameInfo.beepers[this.name]++;
                         trays[n].beepers--;
                     }
                     break;
@@ -221,8 +221,7 @@ EntityKarel = ig.Entity.extend({
         else if (!this.movement.isMoving()) {
             this.currentAnim = this.anims.idle;
         }
-        var msg = this.name + " -> " + " bag: " + GameInfo.beepers;
-        $("#" + this.name + "-bag").text(msg);
+        $(".board-" + this.name + " span.board-beepers").text(GameInfo.beepers[this.name]);
     },
 
     check: function(other) {

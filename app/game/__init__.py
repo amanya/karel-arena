@@ -2,6 +2,8 @@ import json
 import re
 from functools import partial
 
+import socketIO_client
+from celery import Celery
 from flask import Blueprint
 from flask import current_app
 from flask import request
@@ -14,6 +16,12 @@ from app.karel_model import KarelModel
 
 messaging = Blueprint('messaging', __name__)
 
+celery = Celery("tasks", broker="redis://", backend="redis://")
+
+@celery.task
+def spawn_beeper(game_id):
+    with socketIO_client.SocketIO('localhost', 5000, socketIO_client.LoggingNamespace) as socketIO:
+        socketIO.emit('spawn_beeper', {'game_id': game_id}, path='/game')
 
 class GameNamespace(Namespace):
     def __init__(self, redis, namespace=None):
@@ -24,7 +32,13 @@ class GameNamespace(Namespace):
         game_id = re.match(r'^.*([A-Za-z0-9]{4})$', request.referrer).group(1)
         join_room(game_id)
 
+    def on_spawn_beeper(self, data):
+        game_id = data["game_id"]
+        map = self.redis.get(game_id)
+
     def on_execute(self, data):
+        spawn_beeper.apply_async(args=['asdf',], countdown=5)
+
         karel_model = KarelModel(current_app.logger)
         map = ImpactMap(current_app.logger)
         karel_model.load_world(map.to_compiler())

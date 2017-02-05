@@ -9,6 +9,9 @@ class Config:
     REDIS_URL = os.environ['REDIS_URL']
     REDIS_CHAN = 'karel'
 
+    CELERY_BROKER_URL = 'redis://localhost:6379'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
     @staticmethod
     def init_app(app):
         pass

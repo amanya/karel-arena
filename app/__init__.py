@@ -1,3 +1,7 @@
+import eventlet
+
+eventlet.monkey_patch()
+
 import redis as redis_srv
 from flask import Flask
 from flask_bootstrap import Bootstrap
@@ -25,7 +29,7 @@ def create_app(config_name):
 
     bootstrap.init_app(app)
 
-    socketio = SocketIO(app)
+    socketio = SocketIO(app, message_queue="redis://")
 
     global redis
     redis = redis_srv.from_url(app.config['REDIS_URL'])

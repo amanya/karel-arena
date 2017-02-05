@@ -19,11 +19,16 @@ def from_map(coord):
 
 
 class ImpactMap:
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
+        self.impact_map = {}
+
+    def initialize(self):
         with open('levels/level.json') as f:
             self.impact_map = json.loads(f.read())
         self.karel_initial_positions = self.get_initial_positions()
+
+    def load(self, map):
+        self.impact_map = json.loads(map.decode("utf-8"))
 
     def __str__(self):
         return START + json.dumps(self.impact_map) + END

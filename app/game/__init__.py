@@ -33,14 +33,14 @@ class GameNamespace(Namespace):
         join_room(game_id)
 
     def on_spawn_beeper(self, data):
-        game_id = data["game_id"]
-        map = self.redis.get(game_id)
+        map = self.redis.get(data["game_id"])
 
     def on_execute(self, data):
-        spawn_beeper.apply_async(args=['asdf',], countdown=5)
+        spawn_beeper.apply_async(args=[data["game_id"],], countdown=5)
 
         karel_model = KarelModel(current_app.logger)
-        map = ImpactMap(current_app.logger)
+        map = ImpactMap()
+        map.load(self.redis.get(data["game_id"]))
         karel_model.load_world(map.to_compiler())
         karel = Karel(karel_model, data["game_id"], data["nickname"], data["handle"])
         compiler = KarelCompiler(karel)

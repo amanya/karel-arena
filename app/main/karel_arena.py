@@ -26,9 +26,9 @@ def run_game(game_id):
         session['nickname'] = form.data["nickname"]
         session['handle'] = form.data["handle"]
         if not redis.exists(form.data["game_id"]):
-            impact_map = ImpactMap(current_app.logger)
-            map = impact_map.to_compiler()
-            redis.set(form.data["game_id"], json.dumps(map))
+            impact_map = ImpactMap()
+            impact_map.initialize()
+            redis.set(form.data["game_id"], json.dumps(impact_map.impact_map))
         return redirect("/{}".format(game_id))
 
     if 'nickname' in session and len(keys) > 0:
@@ -62,7 +62,8 @@ def reset_game(game_id):
 
 @main.route("/<regex('([A-Za-z0-9]{4})'):game_id>/map")
 def send_map(game_id):
-    impact_map = ImpactMap(current_app.logger)
+    impact_map = ImpactMap()
+    impact_map.load(redis.get(game_id))
     return str(impact_map)
 
 

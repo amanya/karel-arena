@@ -27,6 +27,10 @@ $(document).ready(function() {
         indentUnit: 2,
         mode: "javascript"
     });
+    var test_btn = document.getElementById('test_btn');
+    test_btn.onclick = function() {
+        socket.emit('spawn_beeper', {game_id: game_id});
+    }
     var original_code = "function main(){\n\n}";
     var play_btn = document.getElementById('execute_btn');
     play_btn.onclick = function() {

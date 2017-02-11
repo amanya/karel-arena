@@ -260,11 +260,26 @@ class KarelModel:
         world = {}
         world["dimension"] = [self.rows, self.cols]
         world["beepers"] = []
-        world["walls"] = self.walls.dump_walls()
+        for beeper in self.beepers.dump():
+            world["beepers"].append(beeper)
+        world["walls"] = []
+        for wall in self.walls.dump():
+            world["walls"].append(wall)
         world["karels"] = []
+        karel_direction = dict((
+            (KAREL_EAST, "EAST"),
+            (KAREL_WEST, "WEST"),
+            (KAREL_NORTH, "NORTH"),
+            (KAREL_SOUTH, "SOUTH"),
+        ))
         for karel in self.karels.values():
-            log("karel: {}".format(karel))
-            world["karels"].append([karel.handle, karel.row, karel.col, karel.dir])
+            world["karels"].append([karel.handle, karel.row, karel.col, karel_direction[karel.dir]])
+        world["trays"] = []
+        for tray in self.trays.dump():
+            world["trays"].append(tray)
+        world["exits"] = []
+        for exit in self.exits.dump():
+            world["exits"].append(exit)
         return world
 
     def respawn(self, handle):

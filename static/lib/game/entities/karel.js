@@ -161,7 +161,7 @@ EntityKarel = ig.Entity.extend({
             var beepers = ig.game.getEntitiesByType('EntityBeeper');
             for (var n = 0; n < beepers.length; n++) {
                 var distance = this.distanceTo(beepers[n]);
-                if (distance < 15) {
+                if (distance < 20) {
                     GameInfo.beepers[this.name]++;
                     beepers[n].kill();
                     break;

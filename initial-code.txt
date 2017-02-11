@@ -17,20 +17,19 @@ function main() {
 }
 function vesACasa(){
   while(frontIsClear()){
-    move();
+    pickMove();
   }
   turnRight();
   while(noTrayPresent()){
-    move();
+    pickMove();
   }
   while(beepersInBag()){
     putBeeperInTray();
   }
   turnRight();
   while(noExitPresent()){
-    move();
+    pickMove();
   }
-  exit();
 }
 function pickMove() {
   if(beepersPresent()) {

@@ -1,4 +1,5 @@
 import json
+import random
 import re
 
 START = """ig.module( 'game.levels.level0' )
@@ -36,13 +37,13 @@ class ImpactMap:
     def get_dimension(self):
         return self.impact_map["layer"][0]["width"], self.impact_map["layer"][0]["height"]
 
-    def get_collision_layer(self):
+    def _get_collision_layer(self):
         for layer in self.impact_map["layer"]:
             if layer["name"] == "collision":
                 return layer
 
     def get_walls(self):
-        collision_layer = self.get_collision_layer()
+        collision_layer = self._get_collision_layer()
         rows, cols = self.get_dimension()
         walls = []
         for i in range(0, cols):
@@ -57,6 +58,37 @@ class ImpactMap:
             if entity["type"] == "EntityBeeper":
                 beepers.append((to_map(entity["y"]), to_map(entity["x"])))
         return beepers
+
+    def _valid_place(self, x, y):
+        collision_layer = self._get_collision_layer()
+        if collision_layer["data"][x][y] == 1:
+            return False
+        mx = from_map(x)
+        my = from_map(y)
+        for entity in self.impact_map["entities"]:
+            if entity["type"] in ["EntityKarel", "EntityBeeper", "EntityTray"]:
+                if entity["x"] == mx and entity["y"] == my:
+                    return False
+        return True
+
+    def _pick_random_position(self):
+        rows, cols = self.get_dimension()
+        x = y = None
+        while True:
+            x, y = random.randint(0, cols-1), random.randint(0, rows-1)
+            if self._valid_place(x, y):
+                break
+        return x, y
+
+    def spawn_beeper(self):
+        x, y = self._pick_random_position()
+        beeper = {
+            "type": "EntityBeeper",
+            "x": from_map(x),
+            "y": from_map(y),
+        }
+        self.impact_map["entities"].append(beeper)
+        return beeper
 
     def get_initial_positions(self):
         karels = {}
@@ -120,13 +152,41 @@ class ImpactMap:
         return world
 
     def from_compiler(self, world):
-        for entity in self.impact_map["entities"]:
-            if entity["type"] == "EntityKarel":
-                entity_name = entity["settings"]["name"]
-                for karel in world["karels"]:
-                    if karel[0] == entity_name:
-                        entity["y"] = from_map(karel[1])
-                        entity["x"] = from_map(karel[2])
+        entities_to_clear = ["EntityBeeper", "EntityKarel", "EntityTray"]
+        entities = [e for e in self.impact_map["entities"] if e["type"] not in entities_to_clear]
+        for x, y in world["beepers"]:
+            beeper = {
+                "type": "EntityBeeper",
+                "x": from_map(x),
+                "y": from_map(y)
+            }
+            entities.append(beeper)
+        for x, y, capacity, required, num_beepers in world["trays"]:
+            tray = {
+                "type": "EntityTray",
+                "x": from_map(x),
+                "y": from_map(y),
+                "settings": {
+                    "capacity": capacity,
+                    "initialBeepers": num_beepers,
+                    "required": required,
+                    "owner": ""
+                }
+            }
+            entities.append(tray)
+        for name, x, y, dir in world["karels"]:
+            karel = {
+                "type": "EntityKarel",
+                "x": from_map(x),
+                "y": from_map(y),
+                "settings": {
+                    "facing": dir,
+                    "name": name
+                }
+            }
+            entities.append(karel)
+
+        self.impact_map["entities"] = entities
 
 
 if __name__ == '__main__':

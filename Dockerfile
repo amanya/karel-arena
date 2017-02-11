@@ -19,5 +19,6 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY gunicorn.conf /etc/supervisor/conf.d/gunicorn.conf
+COPY celery.conf /etc/supervisor/conf.d/celery.conf
 
 CMD ["/usr/bin/supervisord"]

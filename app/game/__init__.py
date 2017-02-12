@@ -19,10 +19,12 @@ messaging = Blueprint('messaging', __name__)
 
 celery = Celery("tasks", broker="redis://", backend="redis://")
 
+
 @celery.task
 def spawn_beeper(game_id):
     with socketIO_client.SocketIO('localhost', 80, socketIO_client.LoggingNamespace) as socketIO:
         socketIO.emit('spawn_beeper', {'game_id': game_id}, path='/game')
+
 
 class GameNamespace(Namespace):
     def __init__(self, redis, namespace=None):
@@ -32,7 +34,6 @@ class GameNamespace(Namespace):
     def on_connect(self):
         game_id = re.match(r'^.*([A-Za-z0-9]{4})$', request.referrer).group(1)
         join_room(game_id)
-        spawn_beeper.apply_async(args=[game_id,], countdown=10)
 
     def on_spawn_beeper(self, data):
         with RedLock("redlock:{}".format(data["game_id"])):
@@ -44,7 +45,6 @@ class GameNamespace(Namespace):
         msg = {"handle": "common", "command": "spawnBeeper",
                "params": {"x": beeper["x"], "y": beeper["y"]}}
         emit("command", json.dumps(msg), room=data["game_id"])
-        spawn_beeper.apply_async(args=[data["game_id"],], countdown=5)
 
     def on_execute(self, data):
         karel_model = KarelModel(current_app.logger)

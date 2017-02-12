@@ -1,8 +1,18 @@
+import socketIO_client
+from celery import Celery
 from flask_socketio import emit
+
+celery = Celery("tasks", broker="redis://", backend="redis://")
 
 
 class DyingException(Exception):
     pass
+
+
+@celery.task
+def spawn_beeper(game_id):
+    with socketIO_client.SocketIO('localhost', 80, socketIO_client.LoggingNamespace) as socketIO:
+        socketIO.emit('spawn_beeper', {'game_id': game_id}, path='/game')
 
 
 class Karel:
@@ -131,6 +141,7 @@ class Karel:
     def pickBeeper(self):
         if self.karel_model.pick_beeper(self.handle):
             self.__send_command("pickBeeper")
+            spawn_beeper.apply_async(args=[self.game_id, ], countdown=10)
         else:
             self.__send_command("die")
 
@@ -166,4 +177,3 @@ class Karel:
 
 
 INFINITY = 100000000
-

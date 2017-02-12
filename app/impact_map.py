@@ -154,14 +154,14 @@ class ImpactMap:
     def from_compiler(self, world):
         entities_to_clear = ["EntityBeeper", "EntityKarel", "EntityTray"]
         entities = [e for e in self.impact_map["entities"] if e["type"] not in entities_to_clear]
-        for x, y in world["beepers"]:
+        for y, x in world["beepers"]:
             beeper = {
                 "type": "EntityBeeper",
                 "x": from_map(x),
                 "y": from_map(y)
             }
             entities.append(beeper)
-        for x, y, capacity, required, num_beepers in world["trays"]:
+        for y, x, capacity, required, num_beepers in world["trays"]:
             tray = {
                 "type": "EntityTray",
                 "x": from_map(x),
@@ -174,7 +174,7 @@ class ImpactMap:
                 }
             }
             entities.append(tray)
-        for name, x, y, dir in world["karels"]:
+        for name, y, x, dir in world["karels"]: # :S
             karel = {
                 "type": "EntityKarel",
                 "x": from_map(x),

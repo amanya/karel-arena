@@ -66,7 +66,7 @@ class GameNamespace(Namespace):
             if True:  # TODO: This code should be executed when the player didn't wins
                 for beeper in iter(partial(karel_model.return_beeper, data["handle"]), None):
                     msg = {"handle": data["handle"], "command": "spawnBeeper",
-                           "params": {"x": beeper[0] * 24, "y": beeper[1] * 24}}
+                           "params": {"x": beeper[1] * 24, "y": beeper[0] * 24}}
                     emit("command", json.dumps(msg), room=data["game_id"])
 
                 karel_model.respawn(data["handle"])

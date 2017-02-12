@@ -135,9 +135,9 @@ EntityKarel = ig.Entity.extend({
             GameInfo.command_buffer[this.name] = [];
             this.pos.x = this.initial_pos.x;
             this.pos.y = this.initial_pos.y;
-            this.fixRotation();
             this.justBorn = true;
             this.justBornTimer = new ig.Timer(1.5);
+            this.fixRotation();
         }
         else if (this.action == 'exit') {
             this.action = '';
@@ -178,7 +178,7 @@ EntityKarel = ig.Entity.extend({
         else if (this.action == 'spawnBeeper') {
             this.action = '';
             GameInfo.beepers[this.name]--;
-            ig.game.spawnEntity('EntityBeeper', this.params.y, this.params.x);
+            ig.game.spawnEntity('EntityBeeper', this.params.x, this.params.y);
             this.params = '';
         }
         else if (this.action == 'putBeeperInTray') {

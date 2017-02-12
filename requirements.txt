@@ -27,6 +27,7 @@ python-engineio==1.1.0
 python-socketio==1.6.1
 pytz==2016.10
 redis==2.10.5
+redlock==1.2.0
 requests==2.13.0
 six==1.10.0
 socketIO-client==0.7.2

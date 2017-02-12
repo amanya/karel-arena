@@ -9,6 +9,7 @@ from flask import current_app
 from flask import request
 from flask_socketio import Namespace, emit, join_room
 from pykarel.karel_compiler import KarelCompiler
+from redlock import RedLock
 
 from app.impact_map import ImpactMap
 from app.karel import DyingException, Karel
@@ -33,11 +34,12 @@ class GameNamespace(Namespace):
         join_room(game_id)
 
     def on_spawn_beeper(self, data):
-        map = ImpactMap()
-        map_data = self.redis.get(data["game_id"])
-        map.load(map_data)
-        beeper = map.spawn_beeper()
-        self.redis.set(data["game_id"], json.dumps(map.impact_map))
+        with RedLock("redlock:{}".format(data["game_id"])):
+            map = ImpactMap()
+            map_data = self.redis.get(data["game_id"])
+            map.load(map_data)
+            beeper = map.spawn_beeper()
+            self.redis.set(data["game_id"], json.dumps(map.impact_map))
         msg = {"handle": "karel-blue", "command": "spawnBeeper",
                "params": {"x": beeper["x"], "y": beeper["y"]}}
         emit("command", json.dumps(msg), room=data["game_id"])
@@ -72,7 +74,8 @@ class GameNamespace(Namespace):
                 karel_model.respawn(data["handle"])
                 msg = '{"handle": "%s", "command": "die"}' % (data["handle"])
                 emit('command', msg, room=data["game_id"])
-                map = ImpactMap()
-                map.load(self.redis.get(data["game_id"]))
-                map.from_compiler(karel_model.dump_world())
-                self.redis.set(data["game_id"], json.dumps(map.impact_map))
+                with RedLock("redlock:{}".format(data["game_id"])):
+                    map = ImpactMap()
+                    map.load(self.redis.get(data["game_id"]))
+                    map.from_compiler(karel_model.dump_world())
+                    self.redis.set(data["game_id"], json.dumps(map.impact_map))

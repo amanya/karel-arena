@@ -30,6 +30,7 @@ GameInfo = new function() {
     this.finished = false;
     this.timeOut = false;
     this.command_buffer = {
+        'common': [],
         'karel-blue': [],
         'karel-green': [],
         'karel-red': [],
@@ -107,6 +108,12 @@ MyGame = ig.Game.extend({
                         this.animating[karel_id] = false;
                     }
                 }
+            }
+        }
+        if(GameInfo.command_buffer['common'].length > 0) {
+            var msg = GameInfo.command_buffer['common'].shift();
+            if(msg.command == 'spawnBeeper') {
+                ig.game.spawnEntity('EntityBeeper', msg.params.x, msg.params.y);
             }
         }
 		this.parent();

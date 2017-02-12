@@ -9,10 +9,6 @@ $(document).ready(function() {
         GameInfo.command_buffer[command.handle].push(command);
     });
 
-    socket.on('spawn_beeper', function(data){
-        socket.emit('spawn_beeper', {game_id: game_id});
-    });
-
     socket.on('error', function(error_msg){
         $("#error").fadeIn("slow");
         $("#error_msg").html("<strong>" + error_msg + "</strong>");

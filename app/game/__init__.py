@@ -40,9 +40,10 @@ class GameNamespace(Namespace):
             map.load(map_data)
             beeper = map.spawn_beeper()
             self.redis.set(data["game_id"], json.dumps(map.impact_map))
-        msg = {"handle": "karel-blue", "command": "spawnBeeper",
+        msg = {"handle": "common", "command": "spawnBeeper",
                "params": {"x": beeper["x"], "y": beeper["y"]}}
         emit("command", json.dumps(msg), room=data["game_id"])
+        spawn_beeper.apply_async(args=[data["game_id"],], countdown=5)
 
     def on_execute(self, data):
         spawn_beeper.apply_async(args=[data["game_id"],], countdown=5)

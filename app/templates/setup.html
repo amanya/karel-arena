@@ -18,6 +18,14 @@
             <input class="form-control" type="text" id="nickname">
             <input class="btn btn-primary" type="submit" value="Next">
         </form>
+
+        <br>
+
+        <p>or</p>
+
+        <a href="{{url_for('main.run_game', game_id=game_id)}}?mode=tv" class="btn btn-default btn-lg" aria-label="Left Align">
+            <span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>
+        </a>
     </div>
     <div class="app hidden" id="choose-karel">
         <h1>Karel the robot multiplayer</h1>

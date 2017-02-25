@@ -1,4 +1,3 @@
-var timerExecuted = false;
 var editor = null;
 
 $(document).ready(function() {

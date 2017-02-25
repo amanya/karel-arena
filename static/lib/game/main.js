@@ -66,9 +66,6 @@ MyGame = ig.Game.extend({
             }
         });
 
-        if (timerExecuted){
-        	GameInfo.maxTimeTimer = new ig.Timer(max_time);
-        }
         this.animating = {'karel-blue': false, 'karel-green': false, 'karel-red': false, 'karel-yellow': false};
         if (!GameInfo.finished) {
             GameInfo.beepers[this.name] = 0;

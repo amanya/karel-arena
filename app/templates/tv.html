@@ -23,42 +23,10 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div id="ref_canvas_container">
-                <canvas id='canvas'></canvas>
+                <canvas class='center-block' id='canvas'></canvas>
             </div>
-        </div>
-        <div class="col-md-6">
-            <form>
-                <div class="form-group">
-                    <textarea class="form-control" name="code-editor" id="code" rows="80" cols="20">{{ initial_code }}</textarea>
-                </div>
-                <div class="form-group">
-                    <div class="btn-group" role="group">
-                        <div>
-                            <input class="btn btn-success" type="button" id="execute_btn" value="Executa"/>
-                            <input class="btn btn-warning" type="button" id="test_btn" value="Test"/>
-                            <input class="btn" type="button" id="clean" value="Neteja l'editor"/>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <div class="alert alert-error" style="cursor: pointer ;display:none" id="error">
-                <button type="button" class="close" data-dismiss="alert" id="btn_dismiss">
-                    <i class="icon-remove" id="remove"></i>
-                </button>
-                <strong>
-                    <i class="icon-remove" id="error_msg"></i>
-                </strong>
-                <i class="icon-question-sign"></i>
-            </div>
-            <div class="alert alert-block alert-success" style="display:none" id="expl_error">
-                <strong>
-                    <i class="icon-ok" id="expl_text"></i>
-                </strong>
-                <button class="btn btn-small btn-success" onclick="expl_close();">D'acord</button>
-            </div>
-            <br/>
         </div>
     </div>
     <div class="row">
@@ -91,11 +59,11 @@
 
 {% block scripts %}
 <script type="text/javascript">
-  var game_mode = 'normal';
+  var game_mode = 'tv';
   var level_name = 'level0';
   var game_id = '{{ game_id }}';
-  var handle = '{{ handle }}';
-  var nickname = '{{ nickname }}';
+  var handle = 'tv';
+  var nickname = 'tv';
   var max_instr = 10;
   var max_time = 100;
   var num_beepers = 100;
@@ -114,7 +82,7 @@
 <script src="{{url_for('static', filename='media/js/javascript/javascript.js')}}"></script>
 <script src="{{url_for('static', filename='media/js/socket.io-1.4.5.js')}}"></script>
 <script src="{{url_for('static', filename='media/js/jquery-3.1.1.min.js')}}"></script>
-<script src="{{url_for('static', filename='media/js/game.js')}}"></script>
+<script src="{{url_for('static', filename='media/js/tv.js')}}"></script>
 <script src="/lib/impact/impact.js"></script>
 <script src="/lib/game/main.js"></script>
 {{super()}}

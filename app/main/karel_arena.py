@@ -6,6 +6,7 @@ from flask import flash
 from flask import render_template, send_from_directory
 from flask import session
 from flask import url_for
+from flask import request
 from werkzeug.utils import redirect
 
 from app import game, redis
@@ -16,6 +17,7 @@ from . import main
 
 @main.route("/<regex('([A-Za-z0-9]{4})'):game_id>", methods=["GET", "POST"])
 def run_game(game_id):
+    tv_mode = request.args.get('mode') == "tv"
     key = "{}|*".format(game_id)
     keys = redis.keys(key)
     if len(keys) >= 4:
@@ -30,6 +32,12 @@ def run_game(game_id):
             impact_map.initialize()
             redis.set(form.data["game_id"], json.dumps(impact_map.impact_map))
         return redirect("/{}".format(game_id))
+
+    if tv_mode:
+        return render_template(
+            'tv.html',
+            game_id=game_id
+        )
 
     if 'nickname' in session and len(keys) > 0:
         try:

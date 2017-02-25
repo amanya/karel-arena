@@ -32,7 +32,7 @@ class GameNamespace(Namespace):
         self.redis = redis
 
     def on_connect(self):
-        game_id = re.match(r'^.*([A-Za-z0-9]{4})$', request.referrer).group(1)
+        game_id = re.match(r'^.*/([A-Za-z0-9]{4}).*$', request.referrer).group(1)
         join_room(game_id)
 
     def on_spawn_beeper(self, data):
